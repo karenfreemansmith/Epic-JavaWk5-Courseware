@@ -1,17 +1,32 @@
 # Project Title
-Version 0.0.0: September 13, 2016
+Version 0.0.0: September 24, 2016
 
 by [Karen Freeman-Smith](https://github.com/karenfreemansmith)
 
 ## Description
-A program to ...
+Practice project for Epicodus - Java, week 4 lessons. Create a virtual pet program using Java, Spark, and PostgreSQL.
+
+![screenshot of project running](screenshot.jpg)
+
 
 ### Specifications
+#### User Stories:
+* ...
+
+#### Database Diagram:
+![database diagram](database.png)
+(create diagram at - http://ondras.zarovi.cz/sql/demo/  )
+
+#### Technical Specifications:
+( add chart, make table at - http://www.tablesgenerator.com/markdown_tables )
+
 
 ## Setup/Installation
 * Clone directory
+* Setup database in PSQL:
+  * ...
 * Type 'gradle run' inside the directory
-* Navigate to 'http://localhost:5467'
+* Navigate to 'http://localhost:4567'
 
 ## Support & Contact
 For questions, concerns, or suggestions please email karenfreemansmith@gmail.com
@@ -20,7 +35,7 @@ For questions, concerns, or suggestions please email karenfreemansmith@gmail.com
 * N/A
 
 ## Technologies Used
-Java, JUnit, Spark, Gradle
+Java, JUnit, Spark, PostgreSQL, Gradle
 
 ## Legal
 *Licensed under the GNU General Public License v3.0*
