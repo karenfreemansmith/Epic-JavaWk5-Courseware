@@ -1,9 +1,18 @@
-<h1>My Form</h1>
-<form action='/result'>
-  <div class="form-group">
-    <label for="item1">Item 1: </label>
-    <input id="item1" name="item1" class="form-control" type="text">
-  </div>
-
-  <button type='submit' class='btn'>Get Results!</button>
-</form>
+#if($result)
+  <h1>$result</h1>
+#else
+  <h1>Add Something</h1>
+#end
+<div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  <form action='/result'>
+    <div class="form-group">
+      <label for="item1">Item 1: </label>
+      <input id="item1" name="item1" class="form-control" type="text">
+    </div>
+    <button type='submit' class='btn'>Get Results!</button>
+  </form>
+</div>
+  <div class="col-sm-4"></div>
+</div>
