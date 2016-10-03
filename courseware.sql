@@ -177,7 +177,9 @@ ALTER SEQUENCE enrollment_id_seq OWNED BY enrollment.id;
 CREATE TABLE lessons (
     id integer NOT NULL,
     name character varying,
-    course_id integer
+    course_id integer,
+    reading character varying,
+    lecture text
 );
 
 
@@ -465,7 +467,7 @@ SELECT pg_catalog.setval('enrollment_id_seq', 1, false);
 -- Data for Name: lessons; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY lessons (id, name, course_id) FROM stdin;
+COPY lessons (id, name, course_id, reading, lecture) FROM stdin;
 \.
 
 

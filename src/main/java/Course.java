@@ -71,6 +71,15 @@ public class Course {
     }
   }
 
+  public List<Lesson> getLessons(){
+    String sql = "SELECT * FROM lessons WHERE course_id=:id";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetch(Lesson.class);
+    }
+  }
+
   public static Course find(int id) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM courses where id=:id";
@@ -92,6 +101,4 @@ public class Course {
         .executeAndFetch(Course.class);
     }
   }
-
-
 }
