@@ -45,7 +45,7 @@ A web-based platform that provides a space for teachers to upload courses that a
 
 
 ##### Future Features 1 (would be nice)
-* As a teacher, I want to upload course materials to different templates (abstract lessons to diff lessons - ex: lecture link instead of text)
+* As a teacher, I want to upload course materials to different templates (abstract lessons/assignments to diff ones - ex: lecture link instead of text)
 * As a teacher, I want to control how enrollment works for my course
   * As a teacher, I want to accept students manually in my class
   * As a teacher, I want to set a course to accept students automatically
@@ -62,7 +62,7 @@ A web-based platform that provides a space for teachers to upload courses that a
 * As a student, I want to see how much a course costs/filter courses by free/price etc. --> general search function
 * As a student, I want to be able to sort/filter courses by teacher, category etc.
 * As a teacher, I want to be able to sort/filter students
-
+* As a student, I want to be able to save an assignment in progress and return to it later
 
 * As a student, I want to teach a course.
 
