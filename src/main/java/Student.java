@@ -24,6 +24,27 @@ public class Student {
      this.name = name;
   }
 
+  public int enroll(int courseId) {
+    String sql = "INSERT INTO enrollment (student_id, course_id) VALUES (:student_id, :course_id)";
+    try(Connection con = DB.sql2o.open()) {
+      return (int) con.createQuery (sql, true)
+      .addParameter("student_id", this.id)
+      .addParameter("course_id", courseId)
+      .executeUpdate()
+      .getKey();
+    }
+  }
+
+  public List<Course> getCourses() {
+    try(Connection con =DB.sql2o.open()) {
+      String sql = "SELECT * FROM courses INNER JOIN enrollment ON (enrollment.course_id=courses.id) WHERE enrollment.student_id=:id";
+      return con.createQuery(sql)
+        .addParameter("id", this.id)
+        .throwOnMappingFailure(false)
+        .executeAndFetch(Course.class);
+    }
+  }
+
   public static List<Student> all() {
     try(Connection con =DB.sql2o.open()) {
       String sql = "SELECT * FROM users INNER JOIN students ON (students.user_id = users.id)";

@@ -24,6 +24,21 @@ public class Teacher {
      this.name = name;
   }
 
+  public Course addCourse(String name, String description, String subject) {
+    Course course = new Course(name, description, subject, this.id);
+    course.save();
+    return course;
+  }
+
+  public List<Course> getAllCourses() {
+    try(Connection con =DB.sql2o.open()) {
+      String sql = "SELECT * FROM courses WHERE teacher_id=:id";
+      return con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeAndFetch(Course.class);
+    }
+  }
+
   public static List<Teacher> all() {
     try(Connection con =DB.sql2o.open()) {
       String sql = "SELECT * FROM users INNER JOIN teachers ON (teachers.user_id = users.id)";

@@ -51,6 +51,14 @@ public class TeacherTest {
     assertEquals(null, Teacher.find(tempId));
   }
 
+  @Test
+  public void addCourse_createsNewCourse() {
+    teacher1.addCourse("Writing 101", "Learn how to write in complete sentences!", "Languages");
+    teacher1.addCourse("Writing 102", "Learn how to write in complete paragraphs!", "Languages");
+    teacher1.addCourse("Writing 103", "Learn how to write complete essays!", "Languages");
+    assertEquals(3, teacher1.getAllCourses().size());
+  }
+
   @After
   public void tearDown() {
     try(Connection con = DB.sql2o.open()) {
