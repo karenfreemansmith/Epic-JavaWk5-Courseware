@@ -2,6 +2,9 @@ import org.sql2o.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+//TODO: test for exceptions
+//TODO: test the date_submitted somehow? 
+
 public class AssignmentTest {
   Assignment testAssignment;
   Assignment turnedInAssignment;

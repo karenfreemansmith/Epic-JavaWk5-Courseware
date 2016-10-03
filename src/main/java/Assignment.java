@@ -77,7 +77,7 @@ public class Assignment {
 
   public void turnIn() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO assignments (name, content, student_id, lesson_id) VALUES (:name, :content, :student_id, :lesson_id)";
+      String sql = "INSERT INTO assignments (name, content, student_id, lesson_id, date_submitted) VALUES (:name, :content, :student_id, :lesson_id, now())";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
         .addParameter("content", this.content)
