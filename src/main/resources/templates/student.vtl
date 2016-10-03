@@ -1,0 +1,31 @@
+#if($student)
+  <h1>Added $student.getName()</h1>
+#else
+  <h1>Add Student</h1>
+#end
+#if($students)
+  #foreach($student in $students)
+    <h3>$student.getName()</h3>
+  #end
+#end
+<div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  <form action='/students' method="post">
+    <div class="form-group">
+      <label for="name">Student Name: </label>
+      <input id="name" name="name" class="form-control" type="text">
+    </div>
+    <div class="form-group">
+      <label for="course">Select a Course to begin: </label>
+      <select id="course" name="course" class="form-control" >
+        #foreach($course in $courses)
+          <option value="$course.getId()">$course.getName()</option>
+        #end
+      </select>
+    </div>
+    <button type='submit' class='btn'>Sign Up!</button>
+  </form>
+</div>
+  <div class="col-sm-4"></div>
+</div>

@@ -1,0 +1,16 @@
+body {
+  background: silver;
+}
+
+a, a:hover, a:visited, a:active {
+  color: purple;
+}
+
+.col-sm-4 {
+  text-align: center;
+}
+
+.col-sm-4 i {
+  font-size: 4em;
+  color: purple;
+}

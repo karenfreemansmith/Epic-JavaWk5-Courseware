@@ -1,0 +1,32 @@
+#if($course)
+  <h1>Added $course.getName()</h1>
+#else
+  <h1>Add Course</h1>
+#end
+#if($courses)
+  #foreach($course in $courses)
+    <h3>$course.getName()</h3>
+  #end
+#end
+<div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  <form action='/courses' method="post">
+    <div class="form-group">
+      <label for="name">Course Name: </label>
+      <input id="name" name="name" class="form-control" type="text">
+    </div>
+    <div class="form-group">
+      <label for="description">Course Description: </label>
+      <input id="description" name="description" class="form-control" type="text">
+    </div>
+    <div class="form-group">
+      <label for="subject">Course Subject: </label>
+      <input id="subject" name="subject" class="form-control" type="text">
+    </div>
+    <input type="hidden" name="teacherid" id="teacherid" value="$teacher.getId()">
+    <button type='submit' class='btn'>Save Course!</button>
+  </form>
+</div>
+  <div class="col-sm-4"></div>
+</div>

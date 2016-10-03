@@ -1,18 +1,15 @@
-#if($result)
-  <h1>$result</h1>
-#else
-  <h1>Add Something</h1>
-#end
+<h1>Welcome to Trump University</h1>
 <div class="row">
-  <div class="col-sm-4"></div>
   <div class="col-sm-4">
-  <form action='/result'>
-    <div class="form-group">
-      <label for="item1">Item 1: </label>
-      <input id="item1" name="item1" class="form-control" type="text">
-    </div>
-    <button type='submit' class='btn'>Get Results!</button>
-  </form>
-</div>
-  <div class="col-sm-4"></div>
+    <h1><i class="fa fa-university"></i></h1>
+    <h3><a href="/teachers">Teacher Sign-up</a></h3>
+  </div>
+  <div class="col-sm-4">
+    <h1><i class="fa fa-map"></i></h1>
+    <h3><a href="/courses">Browse Courses</a></h3>
+  </div>
+  <div class="col-sm-4">
+    <h1><i class="fa fa-mortar-board"></i></h1>
+    <h3><a href="/students">Student Sign-up</a></h3>
+  </div>
 </div>
