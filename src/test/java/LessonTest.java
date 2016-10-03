@@ -58,4 +58,25 @@ public class LessonTest {
     assertEquals(true, Lesson.all().get(1).equals(testLesson2));
   }
 
+  @Test public void getUnfinishedAssigments_returnsListOfUnsubmittedAssignments_ArrayList() {
+    testLesson.save();
+    Student student = new Student("Selena");
+    Assignment testAssignment = new Assignment("Weave a Basket", "Step one, weave basket. Take a picture, and turn it in.", testLesson.getId());
+    testAssignment.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", testLesson.getId(), student.getId());
+    testAssignment2.turnIn();
+    assertTrue(testLesson.getUnfinishedAssigments().get(0).equals(testAssignment));
+    assertFalse(testLesson.getUnfinishedAssigments().contains(testAssignment2));
+  }
+
+  @Test public void getFinishedAssigments_returnsListOfSubmittedAssignments_ArrayList() {
+    testLesson.save();
+    Student student = new Student("Selena");
+    Assignment testAssignment = new Assignment("Weave a Basket", "Step one, weave basket. Take a picture, and turn it in.", testLesson.getId());
+    testAssignment.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", testLesson.getId(), student.getId());
+    testAssignment2.turnIn();
+    assertFalse(testLesson.getFinishedAssigments().get(0).equals(testAssignment));
+    assertTrue(testLesson.getFinishedAssigments().contains(testAssignment2));
+  }
 }

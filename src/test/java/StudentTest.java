@@ -68,6 +68,12 @@ public class StudentTest {
     assertEquals(null, Student.find(tempId));
   }
 
+  @Test public void getFinishedAssigments_returnsListOfSubmittedAssignments_ArrayList() {
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", 1, student1.getId());
+    testAssignment2.turnIn();
+    assertTrue(student1.getAssigments().contains(testAssignment2));
+  }
+
   @After
   public void tearDown() {
     try(Connection con = DB.sql2o.open()) {

@@ -62,6 +62,15 @@ public class Student {
     }
   }
 
+  public List<Assignment> getAssigments(){
+    String sql = "SELECT * FROM assignments WHERE student_id=:id";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetch(Assignment.class);
+    }
+  }
+
   public void delete() {
       String sql = "DELETE FROM students WHERE id=:id";
       try(Connection con = DB.sql2o.open()){
