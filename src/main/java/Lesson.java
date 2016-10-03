@@ -60,6 +60,24 @@ public class Lesson {
     }
   }
 
+  public List<Assignment> getUnfinishedAssigments(){
+    String sql = "SELECT * FROM assignments WHERE lesson_id=:id AND student_id IS NULL";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetch(Assignment.class);
+    }
+  }
+
+  public List<Assignment> getFinishedAssigments(){
+    String sql = "SELECT * FROM assignments WHERE lesson_id=:id AND student_id IS NOT NULL";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetch(Assignment.class);
+    }
+  }
+
   public static Lesson find(int id) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM lessons where id=:id";
@@ -81,6 +99,4 @@ public class Lesson {
         .executeAndFetch(Lesson.class);
     }
   }
-
-
 }

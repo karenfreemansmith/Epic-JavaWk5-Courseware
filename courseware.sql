@@ -38,7 +38,9 @@ CREATE TABLE assignments (
     name character varying,
     grade numeric,
     lesson_id integer,
-    date_submitted timestamp without time zone
+    date_submitted timestamp without time zone,
+    content text,
+    student_id integer
 );
 
 
@@ -407,7 +409,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 -- Data for Name: assignments; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY assignments (id, name, grade, lesson_id, date_submitted) FROM stdin;
+COPY assignments (id, name, grade, lesson_id, date_submitted, content, student_id) FROM stdin;
 \.
 
 
