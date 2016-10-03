@@ -20,7 +20,7 @@ public class TeacherTest {
 
   @Test
   public void save_returnsId_true() {
-    assertTrue(teacher1.getId()>1);
+    assertTrue(teacher1.getId()>=1);
   }
 
   @Test
