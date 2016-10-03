@@ -45,13 +45,14 @@ A web-based platform that provides a space for teachers to upload courses that a
 
 
 ##### Future Features 1 (would be nice)
-* As a teacher, I want to upload course materials to different templates
+* As a teacher, I want to upload course materials to different templates (abstract lessons to diff lessons - ex: lecture link instead of text)
 * As a teacher, I want to control how enrollment works for my course
   * As a teacher, I want to accept students manually in my class
   * As a teacher, I want to set a course to accept students automatically
   * As a teacher, I want to be able to set a maximum class size
   * As a teacher, I want to choose between a set term model or a go at your own pace model
   * As a teacher, if I choose the set term model, I want/need to set a class minimum size
+  * As a teacher, I want the site to generate a syllabus for me based on the course and lesson info
 * As a student, I want to signal my desire for enrollment in a course
 * As a student, I want to see the enrollment conditions for a course
 * As a teacher, I want to set students' assignments to be public or private

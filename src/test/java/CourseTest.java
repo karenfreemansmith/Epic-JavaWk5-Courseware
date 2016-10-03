@@ -1,6 +1,7 @@
 import org.sql2o.*;
 import org.junit.*;
 import static org.junit.Assert.*;
+import java.util.Arrays;
 
 public class CourseTest {
   Course testCourse;
@@ -58,6 +59,15 @@ public class CourseTest {
     assertEquals(true, Course.all().get(1).equals(testCourse2));
   }
 
-
+  @Test
+  public void getLessons_returnsAllLessonsOfCourse_true(){
+    testCourse.save();
+    Lesson lesson = new Lesson("Basket Weaving With Reeds", "I <3 reeds by Reed Reedchards, chapters 1-5", "lorem reedsum", testCourse.getId());
+    lesson.save();
+    Lesson testLesson2 = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", testCourse.getId());
+    testLesson2.save();
+    Lesson[] allLessons = {lesson, testLesson2};
+    assertTrue(testCourse.getLessons().containsAll(Arrays.asList(allLessons)));
+  }
 
 }
