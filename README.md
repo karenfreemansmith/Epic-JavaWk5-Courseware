@@ -4,9 +4,9 @@ Version 0.0.0: October 7, 2016
 ![screenshot of project running](screenshot.jpg)
 
 by
-* [Brian](https://github.com/)
-* [Elysia](https://github.com/)
-* [Ewa](https://github.com/)
+* [Brian Dutz](https://github.com/AIMWORLD213445)
+* [Elysia Nason](https://github.com/ElysiaAvery)
+* [Ewa Manek](https://github.com/ewajm)
 * [Karen Freeman-Smith](https://github.com/karenfreemansmith)
 * [Sara Jensen](https://github.com/thejensen)
 
