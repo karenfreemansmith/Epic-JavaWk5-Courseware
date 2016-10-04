@@ -58,25 +58,59 @@ public class LessonTest {
     assertEquals(true, Lesson.all().get(1).equals(testLesson2));
   }
 
-  @Test public void getUnfinishedAssigments_returnsListOfUnsubmittedAssignments_ArrayList() {
+  @Test public void getTeacherAssigments_returnsListOfUnsubmittedAssignments_ArrayList() {
     testLesson.save();
     Student student = new Student("Selena");
     Assignment testAssignment = new Assignment("Weave a Basket", "Step one, weave basket. Take a picture, and turn it in.", testLesson.getId());
     testAssignment.save();
     Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", testLesson.getId(), student.getId());
     testAssignment2.turnIn();
-    assertTrue(testLesson.getUnfinishedAssigments().get(0).equals(testAssignment));
-    assertFalse(testLesson.getUnfinishedAssigments().contains(testAssignment2));
+    assertTrue(testLesson.getTeacherAssigments().get(0).equals(testAssignment));
+    assertFalse(testLesson.getTeacherAssigments().contains(testAssignment2));
   }
 
-  @Test public void getFinishedAssigments_returnsListOfSubmittedAssignments_ArrayList() {
+  @Test public void getStudentAssigments_returnsListOfSubmittedAssignments_ArrayList() {
     testLesson.save();
     Student student = new Student("Selena");
     Assignment testAssignment = new Assignment("Weave a Basket", "Step one, weave basket. Take a picture, and turn it in.", testLesson.getId());
     testAssignment.save();
     Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", testLesson.getId(), student.getId());
     testAssignment2.turnIn();
-    assertFalse(testLesson.getFinishedAssigments().get(0).equals(testAssignment));
-    assertTrue(testLesson.getFinishedAssigments().contains(testAssignment2));
+    assertFalse(testLesson.getStudentAssigments().get(0).equals(testAssignment));
+    assertTrue(testLesson.getStudentAssigments().contains(testAssignment2));
+  }
+
+  @Test public void hasUngraded_returnsTrueIfThereAreUngradedAssignments_true() {
+    Teacher teacher = new Teacher("Steve");
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId(), 311);
+    testAssignment2.turnIn();
+    assertTrue(lesson.hasUngraded());
+  }
+
+  @Test public void hasUngraded_returnsFalseIfAllAssignmentsAreGraded_true() {
+    Teacher teacher = new Teacher("Steve");
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId(), 311);
+    testAssignment2.turnIn();
+    testAssignment2.grade(teacher.getId(), 3.6);
+    assertFalse(lesson.hasUngraded());
+  }
+
+  @Test public void hasUngraded_returnsFalseNoAssignmentsTurnedIn_true() {
+    Teacher teacher = new Teacher("Steve");
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Weave a basket based on the reading.", lesson.getId());
+    testAssignment2.save();
+    assertFalse(lesson.hasUngraded());
   }
 }

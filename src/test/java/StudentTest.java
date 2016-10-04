@@ -51,14 +51,13 @@ public class StudentTest {
 
   @Test
   public void getCourses_returnsAllCourses_true() {
-    Course testCourse1 = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.SUBJECT_CRAFTS, 1);
+    Course testCourse1 = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), 1);
     testCourse1.save();
-    Course testCourse2 = new Course("Intro to the Dark Arts", "Teaches you the Dark Arts", Course.SUBJECT_CRAFTS, 2);
+    Course testCourse2 = new Course("Intro to the Dark Arts", "Teaches you the Dark Arts", Course.Subjects.SUBJECT_CRAFTS.toString(), 2);
     testCourse2.save();
     student1.enroll(testCourse1.getId());
     student1.enroll(testCourse2.getId());
     assertEquals (2, student1.getCourses().size());
-
   }
 
   @Test
@@ -68,10 +67,57 @@ public class StudentTest {
     assertEquals(null, Student.find(tempId));
   }
 
-  @Test public void getFinishedAssigments_returnsListOfSubmittedAssignments_ArrayList() {
+  @Test public void getAssigments_returnsListOfSubmittedAssignments_ArrayList() {
     Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", 1, student1.getId());
     testAssignment2.turnIn();
     assertTrue(student1.getAssigments().contains(testAssignment2));
+  }
+
+  @Test public void getAssigmentsByCourse_returnsListOfSubmittedAssignmentsByCourseId_int() {
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), 1);
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId(), student1.getId());
+    testAssignment2.turnIn();
+    Assignment testAssignment3 = new Assignment("Weave another Basket", "Here's my basket, it was ok.", lesson.getId()+1, student1.getId());
+    testAssignment3.turnIn();
+    assertEquals(1, student1.getCourseAssignments(course.getId()).size());
+    assertTrue(student1.getCourseAssignments(course.getId()).contains(testAssignment2));
+  }
+
+  @Test public void getGradeAvgByCourse_returnsAvgOfAllGrades_double() {
+    Teacher teacher = new Teacher("Steve");
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId(), student1.getId());
+    testAssignment2.turnIn();
+    testAssignment2.grade(teacher.getId(), 81);
+    Assignment testAssignment3 = new Assignment("Weave another Basket", "Here's my basket, it was ok.", lesson.getId(), student1.getId());
+    testAssignment2.turnIn();
+    testAssignment2.grade(teacher.getId(), 75);
+    assertEquals(78, student1.getGradeAvgForCourse(course.getId()), .01);
+  }
+
+  @Test public void getGradeAvg_returnsListOfSubmittedAssignmentsByCourseId_int() {
+    Teacher teacher = new Teacher("Steve");
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Course course2 = new Course("Classical coctails", "All about mixed drinks from The Olden Days", Course.Subjects.SUBJECT_HISTORY.toString(), teacher.getId());
+    course2.save();
+    Lesson lesson2 = new Lesson("Vodka", "Hard Liquor Through The Ages, by Booze McBoozeFace, ch 9", "Vodka - who invented it? Was it the Swedes? Was it some slavic country? Who knows!", course2.getId());
+    lesson2.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId(), student1.getId());
+    testAssignment2.turnIn();
+    testAssignment2.grade(teacher.getId(), 81);
+    Assignment testAssignment3 = new Assignment("Write a well-reasoned argument stating your position on the who invented vodka debate", "It was some slavic country bc lol @ swedes.", lesson2.getId(), student1.getId());
+    testAssignment2.turnIn();
+    testAssignment2.grade(teacher.getId(), 95);
+    assertEquals(88, student1.getGradeAvgForCourse(course.getId()), .01);
   }
 
   @After

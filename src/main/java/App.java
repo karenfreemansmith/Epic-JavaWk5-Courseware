@@ -62,6 +62,7 @@ public class App {
       Teacher teacher = Teacher.find(Integer.parseInt(request.params(":id")));
       model.put("teacher", teacher);
       model.put("courses", teacher.getAllCourses());
+      model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/course.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -78,6 +79,7 @@ public class App {
     get("/courses", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("courses", Course.all());
+      model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/course.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());

@@ -9,16 +9,29 @@ public class Course {
   private String subject;
   private int id;
 
-  public static final String SUBJECT_LITERATURE = "Literature";
-  public static final String SUBJECT_MATH = "Math";
-  public static final String SUBJECT_HISTORY = "History";
-  public static final String SUBJECT_LANGUAGES = "Languages";
-  public static final String SUBJECT_SOCIETY = "Society";
-  public static final String SUBJECT_CRAFTS = "Crafts";
-  public static final String SUBJECT_ART = "Art";
-  public static final String SUBJECT_SCIENCE = "Science";
-  public static final String SUBJECT_SPORTS = "Sports";
-  public static final String SUBJECT_BUSINESS = "Business";
+  public enum Subjects {
+    SUBJECT_LITERATURE("Literature"),
+    SUBJECT_MATH("Math"),
+    SUBJECT_HISTORY("History"),
+    SUBJECT_LANGUAGES("Languages"),
+    SUBJECT_SOCIETY("Society"),
+    SUBJECT_CRAFTS("Crafts"),
+    SUBJECT_ART("Art"),
+    SUBJECT_SCIENCE("Science"),
+    SUBJECT_SPORTS("Sports"),
+    SUBJECT_BUSINESS("Business");
+
+    private final String subjectName;
+
+    private Subjects(String subjectName){
+      this.subjectName = subjectName;
+    }
+
+    @Override
+    public String toString(){
+      return subjectName;
+    }
+  }
 
   public Course (String name, String description, String subject, int teacher_id) {
     this.name = name;
@@ -79,6 +92,16 @@ public class Course {
         .executeAndFetch(Lesson.class);
     }
   }
+
+  public List<Student> getStudents() {
+    try(Connection con =DB.sql2o.open()) {
+      String sql = "SELECT students.* FROM students INNER JOIN enrollment ON (enrollment.student_id=students.id) WHERE enrollment.course_id=:id";
+      return con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeAndFetch(Student.class);
+    }
+  }
+
 
   public static Course find(int id) {
     try(Connection con = DB.sql2o.open()) {

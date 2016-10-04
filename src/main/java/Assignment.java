@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 import org.sql2o.*;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 
 public class Assignment {
   private String name;
@@ -47,6 +48,10 @@ public class Assignment {
 
   public Timestamp getDateSubmitted() {
     return date_submitted;
+  }
+
+  public String getFormattedDate() {
+    return DateFormat.getDateTimeInstance().format(date_submitted);
   }
 
   public int getId() {

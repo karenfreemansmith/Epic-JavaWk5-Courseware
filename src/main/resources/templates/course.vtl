@@ -22,7 +22,11 @@
     </div>
     <div class="form-group">
       <label for="subject">Course Subject: </label>
-      <input id="subject" name="subject" class="form-control" type="text">
+      <select name="subject" class="form-control">
+        #foreach($subject in $subjects)
+          <option>$subject.toString()</option>
+        #end
+      </select>
     </div>
     <input type="hidden" name="teacherid" id="teacherid" value="$teacher.getId()">
     <button type='submit' class='btn'>Save Course!</button>

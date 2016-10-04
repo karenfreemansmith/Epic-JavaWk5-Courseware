@@ -60,7 +60,7 @@ public class Lesson {
     }
   }
 
-  public List<Assignment> getUnfinishedAssigments(){
+  public List<Assignment> getTeacherAssigments(){
     String sql = "SELECT * FROM assignments WHERE lesson_id=:id AND student_id IS NULL";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
@@ -69,12 +69,22 @@ public class Lesson {
     }
   }
 
-  public List<Assignment> getFinishedAssigments(){
+  public List<Assignment> getStudentAssigments(){
     String sql = "SELECT * FROM assignments WHERE lesson_id=:id AND student_id IS NOT NULL";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .addParameter("id", id)
         .executeAndFetch(Assignment.class);
+    }
+  }
+
+  public boolean hasUngraded(){
+    String sql = "SELECT * FROM assignments WHERE lesson_id=:id AND student_id IS NOT NULL AND grade IS NULL";
+    try(Connection con = DB.sql2o.open()) {
+      Assignment ungraded =  con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Assignment.class);
+      return ungraded != null;
     }
   }
 
