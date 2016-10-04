@@ -89,6 +89,9 @@ public class App {
     //individual teacher page, shows courses teaching and allows creating new courses
     get("/teachers/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Teacher teacher = Teacher.find(Integer.parseInt(request.params("id")));
+      int id = teacher.getId();
+      model.put("teacher", teacher);
       model.put("template", "templates/teacher.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -123,6 +126,45 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+    exception(NumberFormatException.class, (exc, req, res) -> {
+      res.status(404);
+      VelocityTemplateEngine engine = new VelocityTemplateEngine();
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("message", "looks like that page doesn't exist!");
+      model.put("template", "templates/notfound.vtl");
+      String html = engine.render(new ModelAndView(model, layout));
+      res.body(html);
+    });
+
+    exception(IndexOutOfBoundsException.class, (exc, req, res) -> {
+      res.status(404);
+      VelocityTemplateEngine engine = new VelocityTemplateEngine();
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("message", exc.getMessage());
+      model.put("template", "templates/notfound.vtl");
+      String html = engine.render(new ModelAndView(model, layout));
+      res.body(html);
+    });
+
+    exception(UnsupportedOperationException.class, (exc, req, res) -> {
+      res.status(500);
+      VelocityTemplateEngine engine = new VelocityTemplateEngine();
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("message", exc.getMessage());
+      model.put("template", "templates/notfound.vtl");
+      String html = engine.render(new ModelAndView(model, layout));
+      res.body(html);
+    });
+
+    exception(NullPointerException.class, (exc, req, res) -> {
+      res.status(500);
+      VelocityTemplateEngine engine = new VelocityTemplateEngine();
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("message", "Congratulations! You have found the secret instant graduation page! Just send us $10,000,000 and you will get your diploma!");
+      model.put("template", "templates/notfound.vtl");
+      String html = engine.render(new ModelAndView(model, layout));
+      res.body(html);
+    });
   }
   //flash message
   private static void setFlashMessage(Request request, String message){
