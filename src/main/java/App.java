@@ -4,6 +4,7 @@ import java.util.List;
 
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
+import spark.Request;
 import static spark.Spark.*;
 
 public class App {
@@ -24,73 +25,103 @@ public class App {
 
     setPort(port);
 
+    //main home page
     get("/", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/index.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //main home page
+    }, new VelocityTemplateEngine());
+    //main student page - signup/register/signin
     get("/students", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      model.put("students", Student.all());
       model.put("template", "templates/students.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //main student page - signup/register/signin
+    }, new VelocityTemplateEngine());
+    post("/students", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Student student = new Student(request.queryParams("name"));
+      model.put("students", Student.all());
+      model.put("student", student);
+      model.put("template", "templates/student.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+    //individual sudent page, shows courses enrolled in and allows new enrollments
     get("/students/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/student.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //individual sudent page, shows courses enrolled in and allows new enrollments
+    }, new VelocityTemplateEngine());
+    //page where students can view a course they are enrolled in and links to lessons
     get("/students/:id/courses/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/student-courses.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //page where students can view a course they are enrolled in and links to lessons
+    }, new VelocityTemplateEngine());
+    //page where students can view lessons and links to submit assignments
     get("/students/:id/courses/:id/lessons/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/student-lessons.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //page where students can view lessons and links to submit assignments
+    }, new VelocityTemplateEngine());
+    // page to edit or submit an assignment
     get("/students/:id/courses/:id/lessons/:id/assignments/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/student-assignments.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); // page to edit or submit an assignment
+    }, new VelocityTemplateEngine());
 
+    //main teacher page - signup/apply/signin
     get("/teachers", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      model.put("teachers", Teacher.all());
       model.put("template", "templates/teachers.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //main teacher page - signup/apply/signin
+    }, new VelocityTemplateEngine());
+    post("/teachers", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Teacher teacher = new Teacher(request.queryParams("name"));
+      model.put("teachers", Teacher.all());
+      model.put("teacher", teacher);
+      model.put("template", "templates/teacher.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+    //individual teacher page, shows courses teaching and allows creating new courses
     get("/teachers/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/teacher.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //individual teacher page, shows courses teaching and allows creating new courses
+    }, new VelocityTemplateEngine());
+    //allows teacher to view/edit course, add lessons
     get("/teachers/:id/courses/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/teacher-courses.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //allows teacher to view/edit course, add lessons
+    }, new VelocityTemplateEngine());
+    //allows teacher to view/edit lessons and add or access assignments for grading
     get("/teachers/:id/courses/:id/lessons/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/teacher-lessons.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //allows teacher to view/edit lessons and add or access assignments for grading
+    }, new VelocityTemplateEngine());
+    // allows teachers to create assignments, lists student submissions, allows grading if in student submission
     get("/teachers/:id/courses/:id/lessons/:id/assignments/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/teacher-assignments.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); // allows teachers to create assignments, lists student submissions, allows grading if in student submission
-
+    }, new VelocityTemplateEngine());
+    //main course page - view/search all courses
     get("/courses", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/courses.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //main course page - view/search all courses
+    }, new VelocityTemplateEngine());
+    //individual course page shows course details
     get("/courses/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/course.vtl");
       return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine()); //individual course page shows course details
+    }, new VelocityTemplateEngine());
 
   }
   //flash message
