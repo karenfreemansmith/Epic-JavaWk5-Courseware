@@ -1,0 +1,26 @@
+<p><a href="/">Home</a>: <a href="/teachers/1">Teacher</a>: <a href="/teachers/1/courses/1">Course</a>: <a href="/teachers/1/courses/1/lessons/1">Lesson</a>: <a href="/teachers/1/courses/1/lessons/1/assignments/1">Assignment</a></p>
+
+
+#if($teacher)
+  <h1>Added $teacher.getName()</h1>
+#else
+  <h1>Add Teacher</h1>
+#end
+#if($teachers)
+  #foreach($teacher in $teachers)
+    <h3><a href="/teachers/$teacher.getId()">$teacher.getName()</a></h3>
+  #end
+#end
+<div class="row">
+  <div class="col-sm-4"></div>
+  <div class="col-sm-4">
+  <form action='/teachers' method="post">
+    <div class="form-group">
+      <label for="name">Teacher Name: </label>
+      <input id="name" name="name" class="form-control" type="text">
+    </div>
+    <button type='submit' class='btn'>Sign Up!</button>
+  </form>
+</div>
+  <div class="col-sm-4"></div>
+</div>
