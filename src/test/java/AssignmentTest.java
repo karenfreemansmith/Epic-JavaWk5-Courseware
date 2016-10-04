@@ -1,9 +1,12 @@
 import org.sql2o.*;
 import org.junit.*;
 import static org.junit.Assert.*;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.text.DateFormat;
 
 //TODO: test for exceptions
-//TODO: test the date_submitted somehow? 
+//TODO: test the date_submitted somehow?
 
 public class AssignmentTest {
   Assignment testAssignment;
@@ -54,6 +57,23 @@ public class AssignmentTest {
   }
 
   @Test
+  public void turnIn_insertsCurrentDateIntoDatabase_Date() {
+    turnedInAssignment.turnIn();
+    Timestamp turnInDate = Assignment.find(turnedInAssignment.getId()).getDateSubmitted();
+    Timestamp rightNow = new Timestamp(new Date().getTime());
+    assertEquals(rightNow.getDate(), turnInDate.getDate());
+    assertEquals(rightNow.getHours(), turnInDate.getHours());
+  }
+
+  @Test
+  public void getFormattedDate_returnsFormattedDate_DateFormat() {
+    turnedInAssignment.turnIn();
+    Assignment savedAssignment = Assignment.find(turnedInAssignment.getId());
+    Timestamp rightNow = new Timestamp(new Date().getTime());
+    assertEquals(DateFormat.getDateTimeInstance().format(rightNow), savedAssignment.getFormattedDate());
+  }
+
+  @Test
   public void find_returnsAssignmentWithSameId_secondAssignment() {
     testAssignment.save();
     Assignment testAssignment2 = new Assignment("Weave With Palm Fronds", "Befriend Your Friends.", 1);
@@ -78,7 +98,7 @@ public class AssignmentTest {
   @Test
   public void grade_updatesGradeOnTurnedInAssignment_float(){
     Teacher teacher = new Teacher("Steve");
-    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.SUBJECT_CRAFTS, teacher.getId());
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
     lesson.save();
@@ -87,5 +107,29 @@ public class AssignmentTest {
     testAssignment2.grade(teacher.getId(), 3.6);
     Assignment gradedAssignment = Assignment.find(testAssignment2.getId());
     assertEquals(3.6, gradedAssignment.getGrade(), .01);
+  }
+
+  @Test(expected=IllegalArgumentException.class)
+  public void grade_throwsExceptionIfTeacherIdDoesNotMatch(){
+    Teacher teacher = new Teacher("Steve");
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId(), 311);
+    testAssignment2.turnIn();
+    testAssignment2.grade(teacher.getId()+1, 3.6);
+  }
+
+  @Test(expected=UnsupportedOperationException.class)
+  public void grade_throwsExceptionIfAssignmentNotTurnedIn(){
+    Teacher teacher = new Teacher("Steve");
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId());
+    testAssignment2.save();
+    testAssignment2.grade(teacher.getId(), 3.6);
   }
 }

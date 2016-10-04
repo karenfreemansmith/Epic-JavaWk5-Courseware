@@ -1,6 +1,8 @@
 import org.sql2o.*;
 import java.util.List;
 
+//cumulative grade for course, cumulate gpa (or whatevs), get all grades for course
+
 public class Student {
 
   private String name;
@@ -37,11 +39,35 @@ public class Student {
 
   public List<Course> getCourses() {
     try(Connection con =DB.sql2o.open()) {
-      String sql = "SELECT * FROM courses INNER JOIN enrollment ON (enrollment.course_id=courses.id) WHERE enrollment.student_id=:id";
+      String sql = "SELECT courses.* FROM courses INNER JOIN enrollment ON (enrollment.course_id=courses.id) WHERE enrollment.student_id=:id";
       return con.createQuery(sql)
         .addParameter("id", this.id)
-        .throwOnMappingFailure(false)
         .executeAndFetch(Course.class);
+    }
+  }
+
+  public double getGradeAvgForCourse(int course_id){
+    try(Connection con = DB.sql2o.open()){
+      String sql = "SELECT grade FROM assignments JOIN lessons ON (lessons.id = assignments.lesson_id) WHERE lessons.course_id = :course_id AND assignments.student_id = :id";
+      List<Integer> grades = con.createQuery(sql)
+        .addParameter("course_id", course_id)
+        .addParameter("id", id)
+        .executeAndFetch(Integer.class);
+      double average = (double) Math.round(grades.stream().mapToDouble(grade -> grade)
+      .average().getAsDouble()*10)/10;
+      return average;
+    }
+  }
+
+  public Double getGradeAvg(){
+    try(Connection con = DB.sql2o.open()){
+      String sql = "SELECT grade FROM assignments WHERE assignments.student_id = :id";
+      List<Integer> grades = con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetch(Integer.class);
+      double average = (double) Math.round(grades.stream().mapToDouble(grade -> grade)
+      .average().getAsDouble()*10)/10;
+      return average;
     }
   }
 
@@ -70,6 +96,8 @@ public class Student {
         .executeAndFetch(Assignment.class);
     }
   }
+
+
 
   public void delete() {
       String sql = "DELETE FROM students WHERE id=:id";
@@ -102,6 +130,16 @@ public class Student {
     } else {
       Student newStudent = (Student) otherStudent;
       return this.getId() == newStudent.getId();
+    }
+  }
+
+  public List<Assignment> getCourseAssignments(int course_id){
+    String sql = "SELECT assignments.* FROM assignments JOIN lessons ON (lessons.id = assignments.lesson_id) WHERE lessons.course_id = :course_id AND assignments.student_id=:id";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .addParameter("course_id", course_id)
+        .executeAndFetch(Assignment.class);
     }
   }
 }

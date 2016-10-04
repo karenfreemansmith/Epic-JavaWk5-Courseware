@@ -11,7 +11,7 @@ public class CourseTest {
 
   @Before
   public void setUp() {
-    testCourse = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.SUBJECT_CRAFTS, 1);
+    testCourse = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), 1);
   }
 
   @Test
@@ -21,7 +21,7 @@ public class CourseTest {
 
   @Test
   public void equals_returnsTrueIfPropertiesAreSame_true(){
-    Course testCourse2 = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.SUBJECT_CRAFTS, 1);
+    Course testCourse2 = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), 1);
     assertTrue(testCourse.equals(testCourse2));
   }
 
@@ -40,7 +40,7 @@ public class CourseTest {
   @Test
   public void find_returnsCourseWithSameId_secondCourse() {
     testCourse.save();
-    Course testCourse2 = new Course("Intro to the Dark Arts", "Teaches you the Dark Arts", Course.SUBJECT_CRAFTS, 2);
+    Course testCourse2 = new Course("Intro to the Dark Arts", "Teaches you the Dark Arts", Course.Subjects.SUBJECT_CRAFTS.toString(), 2);
     testCourse2.save();
     assertEquals(Course.find(testCourse2.getId()), testCourse2);
   }
@@ -53,7 +53,7 @@ public class CourseTest {
   @Test
   public void all_returnsAllInstancesOfCourse_true() {
     testCourse.save();
-    Course testCourse2 = new Course("Intro to the Dark Arts", "Teaches you the Dark Arts", Course.SUBJECT_CRAFTS, 2);
+    Course testCourse2 = new Course("Intro to the Dark Arts", "Teaches you the Dark Arts", Course.Subjects.SUBJECT_CRAFTS.toString(), 2);
     testCourse2.save();
     assertEquals(true, Course.all().get(0).equals(testCourse));
     assertEquals(true, Course.all().get(1).equals(testCourse2));
@@ -70,4 +70,13 @@ public class CourseTest {
     assertTrue(testCourse.getLessons().containsAll(Arrays.asList(allLessons)));
   }
 
+  @Test
+  public void getStudentss_returnsAllStudentss_true() {
+    testCourse.save();
+    Student student1 = new Student("Brian");
+    Student student2 = new Student("Karen");
+    student1.enroll(testCourse.getId());
+    student2.enroll(testCourse.getId());
+    assertEquals (2, testCourse.getStudents().size());
+  }
 }
