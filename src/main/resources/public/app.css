@@ -1,12 +1,12 @@
 body {
-  background: silver;
+  background: #eeeeee;
 }
 
 a, a:hover, a:visited, a:active {
   color: purple;
 }
 
-.col-sm-4 {
+h1, h2, .col-sm-4 {
   text-align: center;
 }
 
