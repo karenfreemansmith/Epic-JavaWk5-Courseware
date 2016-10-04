@@ -7,9 +7,12 @@ import spark.template.velocity.VelocityTemplateEngine;
 import static spark.Spark.*;
 
 public class App {
+  private static final String FLASH_MESSAGE_KEY = "flash_message";
+
   public static void main(String[] args) {
     staticFileLocation("/public");
     String layout = "templates/layout.vtl";
+
 
     ProcessBuilder process = new ProcessBuilder();
     Integer port;
@@ -88,5 +91,28 @@ public class App {
       model.put("template", "templates/course.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine()); //individual course page shows course details
+
+  }
+  //flash message
+  private static void setFlashMessage(Request request, String message){
+    request.session().attribute(FLASH_MESSAGE_KEY, message);
+  }
+
+  private static String getFlashMessage(Request request){
+    if(request.session(false) == null){
+      return null;
+    }
+    if(!request.session().attributes().contains(FLASH_MESSAGE_KEY)){
+      return null;
+    }
+    return (String) request.session().attribute(FLASH_MESSAGE_KEY);
+  }
+
+  private static String captureFlashMessage(Request request){
+    String message = getFlashMessage(request);
+    if(message != null){
+      request.session().removeAttribute(FLASH_MESSAGE_KEY);
+    }
+    return message;
   }
 }
