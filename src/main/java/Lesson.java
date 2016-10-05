@@ -20,8 +20,30 @@ public class Lesson {
     return name;
   }
 
+  public void setName(String name){
+    this.name = name;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE lessons SET name=:name WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("name", name)
+      .executeUpdate();
+    }
+  }
+
   public String getReading() {
     return reading;
+  }
+
+  public void setReading(String reading){
+    this.reading = reading;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE lessons SET reading=:reading WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("reading", reading)
+      .executeUpdate();
+    }
   }
 
   public int getCourseId() {
@@ -30,6 +52,17 @@ public class Lesson {
 
   public String getLecture() {
     return lecture;
+  }
+
+  public void setLecture(String lecture){
+    this.lecture = lecture;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE lessons SET lecture=:lecture WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("lecture", lecture)
+      .executeUpdate();
+    }
   }
 
   public int getId() {

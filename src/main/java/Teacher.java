@@ -22,6 +22,13 @@ public class Teacher {
 
   public void setName (String name) {
      this.name = name;
+     try(Connection con = DB.sql2o.open()){
+       String sql = "UPDATE users SET name=:name WHERE id=:user_id";
+       con.createQuery(sql)
+       .addParameter("user_id", user_id)
+       .addParameter("name", name)
+       .executeUpdate();
+     }
   }
 
   public Course addCourse(String name, String description, String subject) {
@@ -56,12 +63,19 @@ public class Teacher {
     }
   }
 
-  //TODO: delete should set all teacher's courses' teacher_id to NO_TEACHER
-
   public void delete() {
       String sql = "DELETE FROM teachers WHERE id=:id";
+      String userSql = "DELETE FROM users WHERE id=:user_id";
+      String coursesSql = "UPDATE courses SET teacher_id=:no_teacher WHERE teacher_id = :id";
       try(Connection con = DB.sql2o.open()){
         con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+        con.createQuery(userSql)
+        .addParameter("user_id", user_id)
+        .executeUpdate();
+        con.createQuery(coursesSql)
+        .addParameter("no_teacher", Course.NO_TEACHER)
         .addParameter("id", id)
         .executeUpdate();
       }

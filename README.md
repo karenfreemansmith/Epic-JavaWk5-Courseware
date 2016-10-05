@@ -24,23 +24,23 @@ A web-based platform that provides a space for teachers to upload courses that a
 #### User Stories:
 
 ##### MVP (Musts)
-* As a teacher, I want to be able to create a course
-  * As a teacher, I want to upload course materials as links or as simple text
-  * As a teacher I want to see all the students in the course
-  * As a teacher, I want to be able to see my student's grades
-  * As a teacher, I want to be able to be able to access and grade students' assignments
-  * As a teacher, I want to be able to see students' cumulative grades
-* As a teacher, I want to be able to see all my students by course
-* As a teacher, I want to be able to see all my courses
-* As a teacher, I want to navigate to the courses I am teaching.
-* As a teacher, I want some indication if I have assignments that need grading
+* As a teacher, I want to be able to create a course X
+  * As a teacher, I want to upload course materials as links or as simple text X
+  * As a teacher I want to see all the students in the course O
+  * As a teacher, I want to be able to see my student's grades -
+  * As a teacher, I want to be able to be able to access and grade students' assignments X
+  * As a teacher, I want to be able to see students' cumulative grades O
+* As a teacher, I want to be able to see all my students by course O
+* As a teacher, I want to be able to see all my courses X
+* As a teacher, I want to navigate to the courses I am teaching. X
+* As a teacher, I want some indication if I have assignments that need grading (need dashboard something)-
 
-* As a student, I want to access the lessons and assignments for a course
-* As a student, I want to submit my assignments
-* As a student, I want to be able to see my grades
-* As a student, I want to see all available courses
-* As a student, I want to be able enroll in a course
-* As a student, I want to navigate to the courses in which I am enrolled.
+* As a student, I want to access the lessons and assignments for a course X
+* As a student, I want to submit my assignments X
+* As a student, I want to be able to see my grades X
+* As a student, I want to see all available courses X
+* As a student, I want to be able enroll in a course X
+* As a student, I want to navigate to the courses in which I am enrolled. X
 
 
 

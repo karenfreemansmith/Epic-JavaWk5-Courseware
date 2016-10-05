@@ -30,8 +30,30 @@ public class Assignment {
     return name;
   }
 
+  public void setName(String name){
+    this.name = name;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE assignments SET name=:name WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("name", name)
+      .executeUpdate();
+    }
+  }
+
   public String getContent() {
     return content;
+  }
+
+  public void setContent(String content){
+    this.content = content;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE assignments SET content=:content WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("content", content)
+      .executeUpdate();
+    }
   }
 
   public int getLessonId() {

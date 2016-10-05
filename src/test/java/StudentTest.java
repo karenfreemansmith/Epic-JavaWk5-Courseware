@@ -29,9 +29,16 @@ public class StudentTest {
   }
 
   @Test
-  public void setName_updatesNameInDatabase_true() {
+  public void setName_updatesName_true() {
     student1.setName("Todd");
     assertEquals("Todd", student1.getName());
+  }
+
+  @Test
+  public void setName_updatesNameInDatabase_true() {
+    student1.setName("Todd");
+    Student newStudent = Student.find(student1.getId());
+    assertEquals("Todd", newStudent.getName());
   }
 
   @Test
@@ -63,8 +70,11 @@ public class StudentTest {
   @Test
   public void delete_deletesCorrectStudent_null() {
     int tempId = student2.getId();
+    Course testCourse = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), 1);
+    student2.enroll(tempId);
     student2.delete();
     assertEquals(null, Student.find(tempId));
+    assertFalse(testCourse.getStudents().contains(student2));
   }
 
   @Test public void getAssigments_returnsListOfSubmittedAssignments_ArrayList() {

@@ -1,8 +1,6 @@
 import org.sql2o.*;
 import java.util.List;
 
-//cumulative grade for course, cumulate gpa (or whatevs), get all grades for course
-
 public class Student {
 
   private String name;
@@ -24,6 +22,13 @@ public class Student {
 
   public void setName (String name) {
      this.name = name;
+     try(Connection con = DB.sql2o.open()){
+       String sql = "UPDATE users SET name=:name WHERE id=:user_id";
+       con.createQuery(sql)
+       .addParameter("user_id", user_id)
+       .addParameter("name", name)
+       .executeUpdate();
+     }
   }
 
   public int enroll(int courseId) {
@@ -111,11 +116,18 @@ public class Student {
     }
   }
 
-  //on delete remove student enrollment info - some sort of message that if you want enrollment data you need to keep track of your student ID
   public void delete() {
-      String sql = "DELETE FROM students WHERE id=:id";
       try(Connection con = DB.sql2o.open()){
+        String sql = "DELETE FROM students WHERE id=:id";
+        String userSql = "DELETE FROM users WHERE id=:user_id";
+        String enrollmentSql = "DELETE FROM enrollment WHERE student_id = :id";
         con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+        con.createQuery(userSql)
+        .addParameter("user_id", user_id)
+        .executeUpdate();
+        con.createQuery(enrollmentSql)
         .addParameter("id", id)
         .executeUpdate();
       }

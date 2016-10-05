@@ -37,6 +37,30 @@ public class LessonTest {
   }
 
   @Test
+  public void setName_updatesNameInDatabase_true() {
+    testLesson.save();
+    testLesson.setName("Todd");
+    Lesson newLesson = Lesson.find(testLesson.getId());
+    assertEquals("Todd", newLesson.getName());
+  }
+
+  @Test
+  public void setLecture_updatesLectureInDatabase_true() {
+    testLesson.save();
+    testLesson.setLecture("How not to fall asleep during a lecture, part 1 of 101");
+    Lesson newLesson = Lesson.find(testLesson.getId());
+    assertEquals("How not to fall asleep during a lecture, part 1 of 101", newLesson.getLecture());
+  }
+
+  @Test
+  public void setReading_updatesReadingInDatabase_true() {
+    testLesson.save();
+    testLesson.setReading("A Story of Sleeping");
+    Lesson newLesson = Lesson.find(testLesson.getId());
+    assertEquals("A Story of Sleeping", newLesson.getReading());
+  }
+
+  @Test
   public void find_returnsLessonWithSameId_secondLesson() {
     testLesson.save();
     Lesson testLesson2 = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", 1);
@@ -54,8 +78,8 @@ public class LessonTest {
     testLesson.save();
     Lesson testLesson2 = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", 1);
     testLesson2.save();
-    assertEquals(true, Lesson.all().get(0).equals(testLesson));
-    assertEquals(true, Lesson.all().get(1).equals(testLesson2));
+    assertTrue(Lesson.all().contains(testLesson));
+    assertTrue(Lesson.all().contains(testLesson2));
   }
 
   @Test public void getTeacherAssigments_returnsListOfUnsubmittedAssignments_ArrayList() {
