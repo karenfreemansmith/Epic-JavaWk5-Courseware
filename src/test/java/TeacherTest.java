@@ -29,9 +29,16 @@ public class TeacherTest {
   }
 
   @Test
-  public void setName_updatesNameInDatabase_true() {
+  public void setName_updatesName_true() {
     teacher1.setName("Todd");
     assertEquals("Todd", teacher1.getName());
+  }
+
+  @Test
+  public void setName_updatesNameInDatabase_true() {
+    teacher1.setName("Todd");
+    Teacher newTeacher = Teacher.find(teacher1.getId());
+    assertEquals("Todd", newTeacher.getName());
   }
 
   @Test
@@ -49,6 +56,17 @@ public class TeacherTest {
     int tempId = teacher2.getId();
     teacher2.delete();
     assertEquals(null, Teacher.find(tempId));
+  }
+
+  @Test
+  public void delete_setsTeachersCoursesToNoTeacher_null() {
+    int tempId = teacher2.getId();
+    Course testCourse = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher2.getId());
+    testCourse.save();
+    teacher2.delete();
+    Course updatedCourse = Course.find(testCourse.getId());
+    assertEquals(0, teacher2.getAllCourses().size());
+    assertEquals(Course.NO_TEACHER, updatedCourse.getTeacherId());
   }
 
   @Test

@@ -5,9 +5,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.text.DateFormat;
 
-//TODO: test for exceptions
-//TODO: test the date_submitted somehow?
-
 public class AssignmentTest {
   Assignment testAssignment;
   Assignment turnedInAssignment;
@@ -132,4 +129,21 @@ public class AssignmentTest {
     testAssignment2.save();
     testAssignment2.grade(teacher.getId(), 3.6);
   }
+
+  @Test
+  public void setName_updatesNameInDatabase_true() {
+    testAssignment.save();
+    testAssignment.setName("Do Your Homework!");
+    Assignment newAssignment = Assignment.find(testAssignment.getId());
+    assertEquals("Do Your Homework!", newAssignment.getName());
+  }
+
+  @Test
+  public void setContent_updatesContentInDatabase_true() {
+    testAssignment.save();
+    testAssignment.setContent("The merits of Homework are many.");
+    Assignment newAssignment = Assignment.find(testAssignment.getId());
+    assertEquals("The merits of Homework are many.", newAssignment.getContent());
+  }
+
 }

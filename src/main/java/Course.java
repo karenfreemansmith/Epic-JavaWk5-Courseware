@@ -50,8 +50,30 @@ public class Course {
     return name;
   }
 
+  public void setName(String name){
+    this.name = name;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE courses SET name=:name WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("name", name)
+      .executeUpdate();
+    }
+  }
+
   public String getDescription() {
     return description;
+  }
+
+  public void setDescription(String description){
+    this.description = description;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE courses SET description=:description WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("description", description)
+      .executeUpdate();
+    }
   }
 
   public int getTeacherId() {
@@ -60,6 +82,17 @@ public class Course {
 
   public String getSubject() {
     return subject;
+  }
+
+  public void setSubject(String subject){
+    this.subject = subject;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE courses SET subject=:subject WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .addParameter("subject", subject)
+      .executeUpdate();
+    }
   }
 
   public int getId() {
@@ -93,8 +126,12 @@ public class Course {
   //delete lessons as well
   public void delete() {
       String sql = "DELETE FROM courses WHERE id=:id";
+      String lessonsSql = "DELETE FROM lessons WHERE course_id=:id";
       try(Connection con = DB.sql2o.open()){
         con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+        con.createQuery(lessonsSql)
         .addParameter("id", id)
         .executeUpdate();
       }
@@ -106,6 +143,16 @@ public class Course {
       return con.createQuery(sql)
         .addParameter("id", id)
         .executeAndFetch(Lesson.class);
+    }
+  }
+
+  public boolean hazUngraded(){
+    String sql = "SELECT assignments.id FROM assignments JOIN lessons ON (assignments.lesson_id = lessons.id) WHERE lessons.course_id=:id AND assignments.student_id IS NOT NULL AND grade IS NULL";
+    try(Connection con = DB.sql2o.open()) {
+      Integer ungraded =  con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Integer.class);
+      return ungraded != null;
     }
   }
 
@@ -140,4 +187,14 @@ public class Course {
         .executeAndFetch(Course.class);
     }
   }
+
+  public static List<Course> allWithTeachers() {
+    String sql = "SELECT * FROM courses WHERE teacher_id != :no_teacher";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("no_teacher", NO_TEACHER)
+        .executeAndFetch(Course.class);
+    }
+  }
+
 }
