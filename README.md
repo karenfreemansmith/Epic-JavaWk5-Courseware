@@ -43,6 +43,11 @@ A web-based platform that provides a space for teachers to upload courses that a
 * As a student, I want to navigate to the courses in which I am enrolled. X
 
 
+##### MVP Enhancements
+* User Login (Teacher / Student)
+* Teacher can upload their own image to a course, and a lesson.
+  (Note: form id='id' enctype='multipart/form-data' etc.)
+* Add assignments pending review to the Teacher Dashboard.
 
 ##### Future Features 1 (would be nice)
 * As a teacher, I want to upload course materials to different templates (abstract lessons/assignments to diff ones - ex: lecture link instead of text)
