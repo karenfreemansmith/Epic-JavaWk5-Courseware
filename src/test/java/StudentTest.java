@@ -73,7 +73,7 @@ public class StudentTest {
     assertTrue(student1.getAssigments().contains(testAssignment2));
   }
 
-  @Test public void getAssigmentsByCourse_returnsListOfSubmittedAssignmentsByCourseId_int() {
+  @Test public void getCourseAssignments_returnsListOfSubmittedAssignmentsByCourseId_int() {
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), 1);
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -120,6 +120,21 @@ public class StudentTest {
     assertEquals(88, student1.getGradeAvgForCourse(course.getId()), .01);
   }
 
+  @Test public void getLessonAssignments_returnsListOfSubmittedAssignmentsByLessonId_int() {
+    Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), 1);
+    course.save();
+    Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
+    lesson.save();
+    Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", lesson.getId(), student1.getId());
+    testAssignment2.turnIn();
+    Lesson lesson2 = new Lesson("Writing Blueprints in Pencil", "Baskets of Blueprints, Ch 2", "It's like writing, but it's drawing", course.getId());
+    lesson2.save();
+    Assignment testAssignment3 = new Assignment("Weave another Basket", "Here's my basket, it was ok.", lesson2.getId(), student1.getId());
+    testAssignment3.turnIn();
+    assertEquals(1, student1.getLessonAssignments(lesson.getId()).size());
+    assertFalse(student1.getLessonAssignments(lesson.getId()).contains(testAssignment3));
+  }
+
   @After
   public void tearDown() {
     try(Connection con = DB.sql2o.open()) {
@@ -129,4 +144,5 @@ public class StudentTest {
       con.createQuery(sql).executeUpdate();
     }
   }
+
 }

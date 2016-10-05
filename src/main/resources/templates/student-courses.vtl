@@ -7,5 +7,5 @@
 #end</p>
 <p>$course.getDescription()</p>
 #foreach($lesson in $course.getLessons())
-  <li><a href="/students/$student.getId()/courses/course.getId()/lessons/$lesson.getId()">$lesson.getName()</a></li>
+  <li><a href="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()">$lesson.getName()</a></li>
 #end

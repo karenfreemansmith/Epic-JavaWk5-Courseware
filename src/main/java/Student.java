@@ -101,6 +101,15 @@ public class Student {
     }
   }
 
+  public List<Assignment> getLessonAssignments(int lessonId){
+    String sql = "SELECT * FROM assignments WHERE lesson_id=:lesson_id AND student_id=:student_id";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("student_id", id)
+        .addParameter("lesson_id", lessonId)
+        .executeAndFetch(Assignment.class);
+    }
+  }
 
   //on delete remove student enrollment info - some sort of message that if you want enrollment data you need to keep track of your student ID
   public void delete() {

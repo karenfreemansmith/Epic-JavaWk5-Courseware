@@ -28,11 +28,10 @@
   </div>
   <button type="submit" class="btn btn-default">Add Assignment</button>
 </form>
-<li>Sublist of each <a href="/teachers/1/courses/1/lessons/1/assignments/1">Student Submissions for each Assignment</a></li>
 
 #if($lesson.getStudentAssigments().size() > 0)
   #foreach($submission in $lesson.getStudentAssigments())
-    <li><a href="/teachers/$teacher.getId()/courses/$course.getId()/lessons/$lesson.getId()/assignments/$submission.getId()">$submission.getFormattedDate()</a>
+    <li><a href="/teachers/$teacher_id/courses/$course_id/lessons/$lesson.getId()/assignments/$submission.getId()">$submission.getName() - $submission.getFormattedDate()</a>
        - #if($submission.getGrade() > 0)Graded #else Ungraded #end</li>
   #end
 #end

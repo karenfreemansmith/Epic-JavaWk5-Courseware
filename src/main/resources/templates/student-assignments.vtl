@@ -1,6 +1,19 @@
 <h3>$assignment.getName()</h3>
-<p><a href="/">Home</a>: <a href="/students/1">Student</a>: <a href="/students/1/courses/1">Course</a>: <a href="/students/1/courses/1/lessons/1">Lesson</a>: <a href="/students/1/courses/1/lessons/1/assignments/1">Assignment</a></p>
-
-<p>Assignment grade if graded</p>
-<p>Assignment text</p>
-<p>Form to submit assignment</p>
+<p><a href="/">Home</a>: <a href="/students/$student.getId()">Student</a>: <a href="/students/$student.getId()/courses/$course.getId()">Course</a>: <a href="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()">Lesson</a>: <a href="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()/assignments/$assignment.getId()">Assignment</a></p>
+<h4>Assignment: </h4>
+<p>$assignment.getContent()</p>
+#if($studentAssignment)
+  <p>Submitted: $studentAssignment.getFormattedDate()</p>
+  <p>Assignment grade: #if($studentAssignment.getGrade() > 0) $studentAssignment.getGrade() #else Pending Review #end</p>
+  <p>Your submission: </p>
+  <p>$studentAssignment.getContent()</p>
+#else
+<h5>Submit Assignment:
+  <form action="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()/assignments/$assignment.getId()" method="post">
+    <div class="form-group">
+      <label for="content">Assignment Content:</label>
+      <textarea name="content"></textarea>
+    </div>
+    <button type="submit" class="btn btn-default">Submit Assignment</button>
+  </form>
+#end
