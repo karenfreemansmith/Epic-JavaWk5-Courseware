@@ -53,9 +53,13 @@ public class Student {
         .addParameter("course_id", course_id)
         .addParameter("id", id)
         .executeAndFetch(Integer.class);
-      double average = (double) Math.round(grades.stream().mapToDouble(grade -> grade)
-      .average().getAsDouble()*10)/10;
-      return average;
+      if (grades.size() > 0) {
+        double average = (double) Math.round(grades.stream().mapToDouble(grade -> grade)
+        .average().getAsDouble()*10)/10;
+        return average;
+      } else {
+        return -1;
+      }
     }
   }
 
@@ -98,7 +102,7 @@ public class Student {
   }
 
 
-
+  //on delete remove student enrollment info - some sort of message that if you want enrollment data you need to keep track of your student ID
   public void delete() {
       String sql = "DELETE FROM students WHERE id=:id";
       try(Connection con = DB.sql2o.open()){

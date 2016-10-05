@@ -1,4 +1,4 @@
-<p><a href="/">Home</a>: <a href="/students/1">Student</a>: <a href="/students/1/courses/1">Course</a>: <a href="/students/1/courses/1/lessons/1">Lesson</a>: <a href="/students/1/courses/1/lessons/1/assignments/1">Assignment</a></p>
+<p><a href="/">Home</a>: 
 
 
 <div class="row">
@@ -28,7 +28,7 @@
     #end
     #if($students)
       #foreach($student in $students)
-        <h3>$student.getName()</h3>
+        <h3><a href="students/$student.getId()">$student.getName()</a></h3>
       #end
     #end
   </div>

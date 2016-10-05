@@ -60,6 +60,15 @@ public class Lesson {
     }
   }
 
+  public void delete() {
+      String sql = "DELETE FROM lessons WHERE id=:id";
+      try(Connection con = DB.sql2o.open()){
+        con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+      }
+    }
+
   public List<Assignment> getTeacherAssigments(){
     String sql = "SELECT * FROM assignments WHERE lesson_id=:id AND student_id IS NULL";
     try(Connection con = DB.sql2o.open()) {
