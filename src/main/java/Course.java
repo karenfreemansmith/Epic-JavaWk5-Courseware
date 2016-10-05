@@ -50,6 +50,7 @@ public class Course {
     return name;
   }
 
+<<<<<<< HEAD
   public void setName(String name){
     this.name = name;
     try(Connection con = DB.sql2o.open()){
@@ -57,6 +58,15 @@ public class Course {
       con.createQuery(sql)
       .addParameter("id", id)
       .addParameter("name", name)
+=======
+  public void setName(String name) {
+    this.name = name;
+    String sql = "UPDATE courses SET name=:name WHERE id=:id";
+    try(Connection con = DB.sql2o.open()){
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .addParameter("name", this.name)
+>>>>>>> afternoon2
       .executeUpdate();
     }
   }
@@ -65,6 +75,7 @@ public class Course {
     return description;
   }
 
+<<<<<<< HEAD
   public void setDescription(String description){
     this.description = description;
     try(Connection con = DB.sql2o.open()){
@@ -72,6 +83,15 @@ public class Course {
       con.createQuery(sql)
       .addParameter("id", id)
       .addParameter("description", description)
+=======
+  public void setDescription(String description) {
+    this.description = description;
+    String sql = "UPDATE courses SET description=:description WHERE id=:id";
+    try(Connection con = DB.sql2o.open()){
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .addParameter("description", this.description)
+>>>>>>> afternoon2
       .executeUpdate();
     }
   }
@@ -84,6 +104,7 @@ public class Course {
     return subject;
   }
 
+<<<<<<< HEAD
   public void setSubject(String subject){
     this.subject = subject;
     try(Connection con = DB.sql2o.open()){
@@ -91,6 +112,15 @@ public class Course {
       con.createQuery(sql)
       .addParameter("id", id)
       .addParameter("subject", subject)
+=======
+  public void setSubject(String subject) {
+    this.subject= subject;
+    String sql = "UPDATE courses SET subject=:subject WHERE id=:id";
+    try(Connection con = DB.sql2o.open()){
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .addParameter("subject", this.subject)
+>>>>>>> afternoon2
       .executeUpdate();
     }
   }
