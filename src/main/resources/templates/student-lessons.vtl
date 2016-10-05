@@ -3,4 +3,10 @@
 
 <p>$lesson.getName() grade?</p>
 <p>Lesson text</p>
-<p>List of <a href="/students/1/courses/1/lessons/1/assignments/1">Assigmnents</a> in the lesson.</p>
+<p>List of <a href="/students/1/courses/1/lessons/1/assignments/1">Assignments</a> in the lesson.
+  #if($assignment.getGrade() > 0)
+    Grade: $assignment.getGrade()
+  #elseif($ )
+    Assignment pending review
+  #end
+</p>
