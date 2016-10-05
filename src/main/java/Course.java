@@ -50,8 +50,30 @@ public class Course {
     return name;
   }
 
+  public void setName(String name) {
+    this.name = name;
+    String sql = "UPDATE courses SET name=:name WHERE id=:id";
+    try(Connection con = DB.sql2o.open()){
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .addParameter("name", this.name)
+      .executeUpdate();
+    }
+  }
+
   public String getDescription() {
     return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+    String sql = "UPDATE courses SET description=:description WHERE id=:id";
+    try(Connection con = DB.sql2o.open()){
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .addParameter("description", this.description)
+      .executeUpdate();
+    }
   }
 
   public int getTeacherId() {
@@ -60,6 +82,17 @@ public class Course {
 
   public String getSubject() {
     return subject;
+  }
+
+  public void setSubject(String subject) {
+    this.subject= subject;
+    String sql = "UPDATE courses SET subject=:subject WHERE id=:id";
+    try(Connection con = DB.sql2o.open()){
+      con.createQuery(sql)
+      .addParameter("id", this.id)
+      .addParameter("subject", this.subject)
+      .executeUpdate();
+    }
   }
 
   public int getId() {

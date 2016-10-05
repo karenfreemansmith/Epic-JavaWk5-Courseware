@@ -163,9 +163,23 @@ public class App {
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("teacherId")));
       model.put("teacher", teacher);
       model.put("course", course);
+      model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/teacher-courses.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+    post("/teachers/:teacherId/courses/:courseId/edit", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      Course course = Course.find(Integer.parseInt(request.params("courseId")));
+      course.setName(request.queryParams("name"));
+      course.setDescription(request.queryParams("description"));
+      course.setSubject(request.queryParams("subject"));
+      setFlashMessage(request, "Lesson updated!");
+      String urlString = "/teachers/" + teacher_id + "/courses/" + course_id;
+      response.redirect(urlString);
+      return null;
+    });
     post("/teachers/:teacherId/courses/:courseId/lessons/new", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       int course_id = Integer.parseInt(request.params("courseId"));
