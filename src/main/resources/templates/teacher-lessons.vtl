@@ -1,8 +1,38 @@
 <h3>Teacher Lesson</h3>
-<p><a href="/">Home</a>: <a href="/teachers/1">Teacher</a>: <a href="/teachers/1/courses/1">Course</a>: <a href="/teachers/1/courses/1/lessons/1">Lesson</a>: <a href="/teachers/1/courses/1/lessons/1/assignments/1">Assignment</a></p>
+<p><a href="/">Home</a>: <a href="/teachers/$teacher_id">Teacher</a>: <a href="/teachers/$teacher_id/courses/$course_id">Course</a>: <a href="/teachers/$teacher_id/courses/$course_id/lessons/$lesson.getId()">Lesson</a>: <p>
 
-<p>View $lesson.getName()</p>
+<p>$lesson.getName()</p>
+<h4>Content</h4>
+<p>$lesson.getLecture()</p>
+<h4>Supplementary Reading</h4>
+<p>$lesson.getReading()</p>
 <p>Edit $lesson.getName()</p>
-<p>List of <a href="/teachers/1/courses/1/lessons/1/assignments/1">Assigmnents</a> in the lesson.</p>
-<p>Add assignments form</p>
+
+#if($lesson.getTeacherAssigments().size() > 0)
+<h4>Assignments</h4>
+  #foreach($assignment in $lesson.getTeacherAssigments())
+    <li>$assignment.getName()</li>
+    <li>$assignment.getContent()</li>
+    <li>link to remove assignment</li>
+  #end
+#end
+<h4>Add assignment</h4>
+<form action="/teachers/$teacher_id/courses/$course_id/lessons/$lesson.getId()/assignments/new" method="post">
+  <div class="form-group">
+    <label for="name">Assignment Name:</label>
+    <input type="text" class="form-control" name="name" required>
+  </div>
+  <div class="form-group">
+    <label for="content">Assignment Content:</label>
+    <textarea name="content"></textarea>
+  </div>
+  <button type="submit" class="btn btn-default">Add Assignment</button>
+</form>
 <li>Sublist of each <a href="/teachers/1/courses/1/lessons/1/assignments/1">Student Submissions for each Assignment</a></li>
+
+#if($lesson.getStudentAssigments().size() > 0)
+  #foreach($submission in $lesson.getStudentAssigments())
+    <li><a href="/teachers/$teacher.getId()/courses/$course.getId()/lessons/$lesson.getId()/assignments/$submission.getId()">$submission.getFormattedDate()</a>
+       - #if($submission.getGrade() > 0)Graded #else Ungraded #end</li>
+  #end
+#end

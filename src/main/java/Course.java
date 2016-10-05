@@ -2,12 +2,16 @@ import java.util.List;
 import java.util.ArrayList;
 import org.sql2o.*;
 
+//TODO: add a method to retrieve only courses with active teacher
+
 public class Course {
   private String name;
   private String description;
   private int teacher_id;
   private String subject;
   private int id;
+
+  public static final int NO_TEACHER = 0;
 
   public enum Subjects {
     SUBJECT_LITERATURE("Literature"),
@@ -83,6 +87,16 @@ public class Course {
         .getKey();
     }
   }
+
+  //delete lessons as well
+  public void delete() {
+      String sql = "DELETE FROM courses WHERE id=:id";
+      try(Connection con = DB.sql2o.open()){
+        con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+      }
+    }
 
   public List<Lesson> getLessons(){
     String sql = "SELECT * FROM lessons WHERE course_id=:id";

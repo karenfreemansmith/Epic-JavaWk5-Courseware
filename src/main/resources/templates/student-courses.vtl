@@ -1,6 +1,11 @@
 <h3>$course.getName()</h3>
-<p><a href="/">Home</a>: <a href="/students/1">Student</a>: <a href="/students/1/courses/1">Course</a>: <a href="/students/1/courses/1/lessons/1">Lesson</a>: <a href="/students/1/courses/1/lessons/1/assignments/1">Assignment</a></p>
-
-<p>Course grade so far</p>
-<p>General information (or announcements) about course</p>
-<p>List of <a href="/students/1/courses/1/lessons/1">Lessons</a> in the course.</p>
+<p><a href="/">Home</a>: <a href="/students/$student.getId()">Student</a>: <a href="/students/$student.getId()/courses/$course.getId()">Course</a>: </p>
+<p>Course grade so far: #if($student.getGradeAvgForCourse($course.getId()) > -1)
+  $student.getGradeAvgForCourse($course.getId())
+  #else
+  no grades yet!
+#end</p>
+<p>$course.getDescription()</p>
+#foreach($lesson in $course.getLessons())
+  <li><a href="/students/$student.getId()/courses/course.getId()/lessons/$lesson.getId()">$lesson.getName()</a></li>
+#end

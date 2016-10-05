@@ -56,6 +56,8 @@ public class Teacher {
     }
   }
 
+  //TODO: delete should set all teacher's courses' teacher_id to NO_TEACHER
+
   public void delete() {
       String sql = "DELETE FROM teachers WHERE id=:id";
       try(Connection con = DB.sql2o.open()){

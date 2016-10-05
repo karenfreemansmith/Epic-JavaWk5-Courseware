@@ -1,5 +1,26 @@
 <h3>$course.getName()</h3>
-<p><a href="/">Home</a>: <a href="/teachers/1">Teacher</a>: <a href="/teachers/1/courses/1">Course</a>: <a href="/teachers/1/courses/1/lessons/1">Lesson</a>: <a href="/teachers/1/courses/1/lessons/1/assignments/1">Assignment</a></p>
+<p><a href="/">Home</a>: <a href="/teachers/$teacher.getId()">Teacher</a>: <a href="/teachers/$teacher.getId()/courses/$course.getId()">Course</a>:
 
 <p>Edit $course.getName()</p>
-<p>List of <a href="/teachers/1/courses/1/lessons/1">Lessons</a> in the course.</p>
+#if($course.getLessons().size() > 0)
+  #foreach($lesson in $course.getLessons())
+    <li><a href="/teachers/$teacher.getId()/courses/$course.getId()/lessons/$lesson.getId()">$lesson.getName()</a></li>
+  #end
+#end
+
+<h4>Add Lesson</h4>
+<form action="/teachers/$teacher.getId()/courses/$course.getId()/lessons/new" method="post">
+  <div class="form-group">
+    <label for="name">Lesson Name:</label>
+    <input type="text" class="form-control" name="name" required>
+  </div>
+  <div class="form-group">
+    <label for="lecture">Lesson Content:</label>
+    <textarea name="lecture"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="reading">Lesson Additional Reading (if any):</label>
+    <input type="text" class="form-control" name="reading">
+  </div>
+  <button type="submit" class="btn btn-default">Add Lesson</button>
+</form>
