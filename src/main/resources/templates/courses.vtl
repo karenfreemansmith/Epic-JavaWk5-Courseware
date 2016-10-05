@@ -1,4 +1,12 @@
-<h3>Course List</h3>
-#foreach($course in $courses)
-  <li><a href="/courses/$course.getId()">$course.getName()</a></li>
-#end
+<div class="row">
+  #foreach($subject in $subjects)
+    <div class="col-sm-4">
+      <h3>$subject</h3>
+      #foreach($course in $courses)
+        #if($course.getSubject()==$subject)
+          <h4><a href="/courses/$course.getId()">$course.getName()</a></h4>
+        #end
+      #end
+    </div>
+  #end
+</div>
