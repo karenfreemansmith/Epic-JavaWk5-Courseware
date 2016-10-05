@@ -82,7 +82,11 @@ public class App {
     get("/students/:studentId/courses/:courseId/lessons/:lessonId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
+      Student student = Student.find(Integer.parseInt(request.params("studentId")));
+      Course course = Course.find(Integer.parseInt(request.params("courseId")));
+      model.put("student", student);
       model.put("lesson", lesson);
+      model.put("course", course);
       model.put("template", "templates/student-lessons.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -90,11 +94,37 @@ public class App {
     get("/students/:studentId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
+      Student student = Student.find(Integer.parseInt(request.params("studentId")));
+      Course course = Course.find(Integer.parseInt(request.params("courseId")));
+      List<Assignment> turnedInAssignments  = student.getLessonAssignments(lesson.getId());
+      Assignment studentAssignment = null;
+      for(Assignment turnedInAssignment : turnedInAssignments){
+        if(turnedInAssignment.getName().equals(assignment.getName())){
+          studentAssignment = turnedInAssignment;
+        }
+      }
+      model.put("student", student);
+      model.put("message", captureFlashMessage(request));
+      model.put("lesson", lesson);
+      model.put("course", course);
       model.put("assignment", assignment);
+      model.put("studentAssignment", studentAssignment);
       model.put("template", "templates/student-assignments.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
-
+    post("/students/:studentId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
+      Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      int lessonId = Integer.parseInt(request.params("lessonId"));
+      int studentId = Integer.parseInt(request.params("studentId"));
+      int courseId = Integer.parseInt(request.params("courseId"));
+      Assignment studentAssignment = new Assignment(assignment.getName(), request.queryParams("content"), assignment.getLessonId(), studentId);
+      studentAssignment.turnIn();
+      setFlashMessage(request, "Assignment Submitted!");
+      String urlString = "/students/" + studentId + "/courses/" + courseId + "/lessons/" + lessonId + "/assignments/" + assignment.getId();
+      response.redirect(urlString);
+      return null;
+    });
     //main teacher page - signup/apply/signin
     get("/teachers", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
@@ -178,10 +208,31 @@ public class App {
     get("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      Student student = Student.find(assignment.getStudentId());
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      int lesson_id = Integer.parseInt(request.params("lessonId"));
+      model.put("course_id", course_id);
+      model.put("teacher_id", teacher_id);
+      model.put("lesson_id", lesson_id);
+      model.put("student", student);
+      model.put("message", captureFlashMessage(request));
       model.put("assignment", assignment);
       model.put("template", "templates/teacher-assignments.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+    post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
+      Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      double grade = Double.parseDouble(request.queryParams("grade"));
+      assignment.grade(Integer.parseInt(request.queryParams("teacher_id")), grade);
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      int lesson_id = Integer.parseInt(request.params("lessonId"));
+      setFlashMessage(request, "Grade Added!");
+      String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson_id + "/assignments/" + assignment.getId();
+      response.redirect(urlString);
+      return null;
+    });
     //main course page - view/search all courses
     //TODO: add some indicator if a course is not being taught
     get("/courses", (request, response) -> {

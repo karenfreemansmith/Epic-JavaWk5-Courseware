@@ -1,12 +1,18 @@
 <h3>$lesson.getName()</h3>
-<p><a href="/">Home</a>: <a href="/students/1">Student</a>: <a href="/students/1/courses/1">Course</a>: <a href="/students/1/courses/1/lessons/1">Lesson</a>: <a href="/students/1/courses/1/lessons/1/assignments/1">Assignment</a></p>
-
-<p>$lesson.getName() grade?</p>
-<p>Lesson text</p>
-<p>List of <a href="/students/1/courses/1/lessons/1/assignments/1">Assignments</a> in the lesson.
-  #if($assignment.getGrade() > 0)
-    Grade: $assignment.getGrade()
-  #elseif($ )
-    Assignment pending review
+<p><a href="/">Home</a>: <a href="/students/$student.getId()">Student</a>: <a href="/students/$student.getId()/courses/$course.getId()">Course</a>: <a href="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()">Lesson</a>: </p>
+<p>$lesson.getLecture()</p>
+<h4>Reading</h4>
+<p>$lesson.getReading()</p>
+<h4>Assignments</h4>
+  #foreach($assignment in $lesson.getTeacherAssigments())
+    <p><a href="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()/assignments/$assignment.getId()">$assignment.getName()</a> -
+    #foreach($submission in $student.getLessonAssignments($lesson.getId()))
+      #if($submission.getName().equals($assignment.getName()))
+        #if($submission.getGrade() > 0)
+        Grade: $submission.getGrade()
+        #else
+        Assignment pending review
+        #end
+      #end
+    #end
   #end
-</p>
