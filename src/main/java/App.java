@@ -238,6 +238,7 @@ public class App {
     get("/courses", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("courses", Course.all());
+      model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/courses.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -245,6 +246,7 @@ public class App {
     get("/courses/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Course course = Course.find(Integer.parseInt(request.params("id")));
+      model.put("ext", ".jpg");
       model.put("course", course);
       model.put("template", "templates/course.vtl");
       return new ModelAndView(model, layout);

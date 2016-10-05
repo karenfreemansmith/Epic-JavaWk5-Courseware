@@ -19,10 +19,12 @@ public class Course {
     SUBJECT_HISTORY("History"),
     SUBJECT_LANGUAGES("Languages"),
     SUBJECT_SOCIETY("Society"),
+    SUBJECT_POLITICS("Law & Government"),
     SUBJECT_CRAFTS("Crafts"),
     SUBJECT_ART("Art"),
     SUBJECT_SCIENCE("Science"),
     SUBJECT_SPORTS("Sports"),
+    SUBJECT_TECHNOLOGY("Technology"),
     SUBJECT_BUSINESS("Business");
 
     private final String subjectName;

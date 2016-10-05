@@ -1,4 +1,12 @@
-<h3>$course.getName()</h3>
-<p><a href="/">Home</a>: <a href="/courses">Course List</a></p>
+<div class="row">
+  <div class="col-sm-6">
+    <img class="img-responsive" src = "/images/$course.getSubject()$ext">
+  </div>
+  <div class="col-sm-6">
+    <h3>$course.getName()</h3>
+    <p><a href="/">Home</a>: <a href="/courses">Course List</a></p>
 
-<p>$course.getDescription()</p>
+    <p>$course.getDescription()</p>
+    <a href="/students"><button id="class-enroll" class="btn btn-lg pull-right"><h3>Enroll Today!</h3></button></a>
+  </div>
+</div>

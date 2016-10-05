@@ -1,16 +1,43 @@
 body {
   background: #eeeeee;
+  font-family: 'Lora', serif;
 }
 
 a, a:hover, a:visited, a:active {
   color: purple;
+  font-family: 'Lora', serif;
+  font-weight: bold;
 }
 
-h1, h2, .col-sm-4 {
+.front-page {
   text-align: center;
 }
 
 .col-sm-4 i {
   font-size: 4em;
   color: purple;
+}
+
+img {
+  margin-top: 5%;
+}
+
+h1, h2, h3 {
+  font-family: 'Cinzel', serif;
+}
+
+#headline {
+  font-family: 'Cinzel', serif;
+  font-weight: bold;
+  font-size: 2em;
+  text-decoration: none;
+}
+
+#class-enroll {
+  background-color: purple;
+  color: #eee;
+}
+
+#class-enroll h3 {
+  margin: 5px;
 }
