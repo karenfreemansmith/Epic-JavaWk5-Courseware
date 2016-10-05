@@ -49,24 +49,32 @@ public class App {
     //individual sudent page, shows courses enrolled in and allows new enrollments
     get("/students/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Student student = Student.find(Integer.parseInt(request.params("id")));
+      model.put("student", student);
       model.put("template", "templates/student.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     //page where students can view a course they are enrolled in and links to lessons
-    get("/students/:id/courses/:id", (request, response) -> {
+    get("/students/:studentId/courses/:courseId/", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Course course = Course.find(Integer.parseInt(request.params("courseId")));
+      model.put("course", course);
       model.put("template", "templates/student-courses.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     //page where students can view lessons and links to submit assignments
-    get("/students/:id/courses/:id/lessons/:id", (request, response) -> {
+    get("/students/:studentId/courses/:courseId/lessons/:lessonId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
+      model.put("lesson", lesson);
       model.put("template", "templates/student-lessons.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     // page to edit or submit an assignment
-    get("/students/:id/courses/:id/lessons/:id/assignments/:id", (request, response) -> {
+    get("/students/:studentId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      model.put("assignment", assignment);
       model.put("template", "templates/student-assignments.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -81,8 +89,7 @@ public class App {
     post("/teachers", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Teacher teacher = new Teacher(request.queryParams("name"));
-      model.put("teachers", Teacher.all());
-      model.put("teacher", teacher);
+      response.redirect("/teachers/" + teacher.getId());
       model.put("template", "templates/teacher.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -90,38 +97,57 @@ public class App {
     get("/teachers/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("id")));
-      int id = teacher.getId();
       model.put("teacher", teacher);
+      model.put("subjects", Course.Subjects.values());
+      model.put("template", "templates/teacher.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+    post("/teachers/:id", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Course course = new Course(request.queryParams("title"),request.queryParams("description"),request.queryParams("subject"),Integer.parseInt(request.params("id")));
+      course.save();
+      Teacher teacher = Teacher.find(Integer.parseInt(request.params("id")));
+      model.put("teacher", teacher);
+      model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/teacher.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     //allows teacher to view/edit course, add lessons
-    get("/teachers/:id/courses/:id", (request, response) -> {
+    get("/teachers/:teacherId/courses/:courseId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Course course = Course.find(Integer.parseInt(request.params("courseId")));
+      model.put("course", course);
       model.put("template", "templates/teacher-courses.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     //allows teacher to view/edit lessons and add or access assignments for grading
-    get("/teachers/:id/courses/:id/lessons/:id", (request, response) -> {
+    get("/teachers/:teacherId/courses/:courseId/lessons/:lessonId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
+      model.put("lesson", lesson);
       model.put("template", "templates/teacher-lessons.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     // allows teachers to create assignments, lists student submissions, allows grading if in student submission
-    get("/teachers/:id/courses/:id/lessons/:id/assignments/:id", (request, response) -> {
+    get("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      model.put("assignment", assignment);
       model.put("template", "templates/teacher-assignments.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     //main course page - view/search all courses
     get("/courses", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      model.put("courses", Course.all());
       model.put("template", "templates/courses.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     //individual course page shows course details
     get("/courses/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      Course course = Course.find(Integer.parseInt(request.params("id")));
+      model.put("course", course);
       model.put("template", "templates/course.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
