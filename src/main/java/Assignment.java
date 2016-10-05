@@ -80,6 +80,15 @@ public class Assignment {
     }
   }
 
+  public void delete() {
+      String sql = "DELETE FROM assignments WHERE id=:id";
+      try(Connection con = DB.sql2o.open()){
+        con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+      }
+    }
+
   public void turnIn() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO assignments (name, content, student_id, lesson_id, date_submitted) VALUES (:name, :content, :student_id, :lesson_id, now())";
