@@ -125,6 +125,21 @@ public class App {
       response.redirect(urlString);
       return null;
     });
+    //update assignment if student wants to change it after submitting it
+    post("/students/:studentId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId/edit", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int student_id = Integer.parseInt(request.params("studentId"));
+      int lesson_id = Integer.parseInt(request.params("lessonId"));
+      int assignment_id = Integer.parseInt(request.params("assignmentId"));
+      Assignment studentAssignment = Assignment.find(Integer.parseInt(request.queryParams("submission_id")));
+      studentAssignment.setContent(request.queryParams("content"));
+      studentAssignment.setDateSubmitted();
+      setFlashMessage(request, "Assignment updated!");
+      String urlString = "/students/" + student_id + "/courses/" + course_id + "/lessons/" + lesson_id + "/assignments/" + assignment_id;
+      response.redirect(urlString);
+      return null;
+    });
     //main teacher page - signup/apply/signin
     get("/teachers", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
@@ -163,6 +178,7 @@ public class App {
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("teacherId")));
       model.put("teacher", teacher);
       model.put("course", course);
+      model.put("message", captureFlashMessage(request));
       model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/teacher-courses.vtl");
       return new ModelAndView(model, layout);
@@ -216,6 +232,18 @@ public class App {
       lesson.setReading(request.queryParams("reading"));
       setFlashMessage(request, "Lesson updated!");
       String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson.getId();
+      response.redirect(urlString);
+      return null;
+    });
+    //delete lesson if teacher wants to delete it
+    post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/delete", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
+      lesson.delete();
+      setFlashMessage(request, "Lesson deleted!");
+      String urlString = "/teachers/" + teacher_id + "/courses/" + course_id;
       response.redirect(urlString);
       return null;
     });
@@ -274,6 +302,19 @@ public class App {
       assignment.setName(request.queryParams("name"));
       assignment.setContent(request.queryParams("content"));
       setFlashMessage(request, "Assignment updated!");
+      String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson_id;
+      response.redirect(urlString);
+      return null;
+    });
+    //delete assignment if teacher wants to delete it
+    post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId/delete", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      int lesson_id = Integer.parseInt(request.params("lessonId"));
+      Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      assignment.delete();
+      setFlashMessage(request, "Assignment deleted!");
       String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson_id;
       response.redirect(urlString);
       return null;

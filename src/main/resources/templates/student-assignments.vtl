@@ -3,12 +3,21 @@
 <h4>Assignment: </h4>
 <p>$assignment.getContent()</p>
 #if($studentAssignment)
+  <h4>Your submission: </h4>
   <p>Submitted: $studentAssignment.getFormattedDate()</p>
   <p>Assignment grade: #if($studentAssignment.getGrade() > 0) $studentAssignment.getGrade() #else Pending Review #end</p>
-  <p>Your submission: </p>
   <p>$studentAssignment.getContent()</p>
+  <h4>Edit Assignment:</h4>
+    <form action="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()/assignments/$assignment.getId()/edit" method="post">
+      <input type="hidden" name="submission_id" value="$studentAssignment.getId()">
+      <div class="form-group">
+        <label for="content">Assignment Content:</label>
+        <textarea name="content">$studentAssignment.getContent()</textarea>
+      </div>
+      <button type="submit" class="btn btn-default">Submit Assignment</button>
+    </form>
 #else
-<h5>Submit Assignment:
+<h4>Submit Assignment:</h4>
   <form action="/students/$student.getId()/courses/$course.getId()/lessons/$lesson.getId()/assignments/$assignment.getId()" method="post">
     <div class="form-group">
       <label for="content">Assignment Content:</label>
