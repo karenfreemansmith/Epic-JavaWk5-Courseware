@@ -44,9 +44,9 @@ A web-based platform that provides a space for teachers to upload courses that a
 
 
 ##### MVP Enhancements
+
 * User Login (Teacher / Student)
-* Teacher can upload their own image to a course, and a lesson.
-  (Note: form id='id' enctype='multipart/form-data' etc.)
+  * Block duplicate names for both teachers and students
 * Add assignments pending review to the Teacher Dashboard.
 
 ##### Future Features 1 (would be nice)
@@ -68,8 +68,9 @@ A web-based platform that provides a space for teachers to upload courses that a
 * As a student, I want to be able to sort/filter courses by teacher, category etc.
 * As a teacher, I want to be able to sort/filter students
 * As a student, I want to be able to save an assignment in progress and return to it later
-
 * As a student, I want to teach a course.
+* Teacher can upload their own image to a course, and a lesson.
+  (Note: form id='id' enctype='multipart/form-data' etc.)
 
 ##### Future Features 2 (probably not happening)
   * As a teacher, I want to set prereqs for a course

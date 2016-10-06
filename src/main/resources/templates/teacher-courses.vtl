@@ -2,8 +2,35 @@
   <div class="col-sm-6">
     <h3>$course.getName()</h3>
     <p><a href="/">Home</a>: <a href="/teachers/$teacher.getId()">Teacher</a>: <a href="/teachers/$teacher.getId()/courses/$course.getId()">Course</a>:
-
-    <p>Edit Course:</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-5">
+    #if($course.getLessons().size() > 0)
+      <h4>Lessons</h4>
+      #foreach($lesson in $course.getLessons())
+        <li><a href="/teachers/$teacher.getId()/courses/$course.getId()/lessons/$lesson.getId()">$lesson.getName()</a></li>
+      #end
+    #end
+    <h3>Add Lesson</h3>
+    <form action="/teachers/$teacher.getId()/courses/$course.getId()/lessons/new" method="post">
+      <div class="form-group">
+        <label for="name">Lesson Name:</label>
+        <input type="text" class="form-control" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="lecture">Lesson Content:</label>
+        <textarea name="lecture"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="reading">Lesson Additional Reading (if any):</label>
+        <input type="text" class="form-control" name="reading">
+      </div>
+      <button type="submit" class="btn btn-default">Add Lesson</button>
+    </form>
+  </div>
+  <div class="col-sm-5">
+    <h3>Edit Course</h3>
     <form action="/teachers/$teacher.getId()/courses/$course.getId()/edit" method="post">
       <div class="form-group">
         <label for="name">Course Title:</label>
@@ -23,52 +50,31 @@
       </div>
       <button type="submit" class="btn btn-default">Update Course</button>
     </form>
-    <form action="/teachers/$teacher.getId()/courses/$course.getId()/delete" method="post">
-      <button type="submit" class="btn btn-danger">Delete Course</button>
-    </form>
-    #if($course.getLessons().size() > 0)
-      #foreach($lesson in $course.getLessons())
-        <li><a href="/teachers/$teacher.getId()/courses/$course.getId()/lessons/$lesson.getId()">$lesson.getName()</a></li>
-      #end
-    #end
-
-    <h4>Add Lesson</h4>
-    <form action="/teachers/$teacher.getId()/courses/$course.getId()/lessons/new" method="post">
-      <div class="form-group">
-        <label for="name">Lesson Name:</label>
-        <input type="text" class="form-control" name="name" required>
-      </div>
-      <div class="form-group">
-        <label for="lecture">Lesson Content:</label>
-        <textarea name="lecture"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="reading">Lesson Additional Reading (if any):</label>
-        <input type="text" class="form-control" name="reading">
-      </div>
-      <button type="submit" class="btn btn-default">Add Lesson</button>
-    </form>
   </div>
-  <div class="col-sm-3">
-    <h4 class="students-enrolled">Students Enrolled:</h4>
+  <div class="col-sm-2">
+    <h3>Roster</h3>
     #if($course.getStudents().size() > 0)
+      <h4 id="students-enrolled">Students Enrolled:</h4>
       #foreach($student in $course.getStudents())
         <li><a href="/students/$student.getId()">$student.getName()</a></li>
       #end
     #else
-      <li>There are no students enrolled yet.</li>
+      <h4>There are no students enrolled yet.</h4>
     #end
   </div>
-  <div class="col-sm-3">
-    <h4 class="students-enrolled">Student's Grade:</h4>
-    #if($student.getGradeAvgForCourse($course.getId()) == -1.0)
-      #foreach($student in $course.getStudents())
-        <li><a href="/students/$student.getId()">$student.getGradeAvgForCourse($course.getId())</a></li>
+  <div class="col-sm-2">
+    #if($student.getGradeAvgForCourse().size() > 0)
+      <h4 id="students-enrolled">Student's Grade:</h4>
+      #if($student.getGradeAvgForCourse($course.getId()) == -1.0)
+        #foreach($student in $course.getStudents())
+          <li><a href="/students/$student.getId()">$student.getGradeAvgForCourse($course.getId())</a></li>
+        #end
+      #else
+        #foreach($student in $course.getStudents())
+          <li>No grade yet.</li>
+        #end
       #end
-    #else
-      #foreach($student in $course.getStudents())
-        <li>No grade yet.</li>
-      #end
+      #else
     #end
   </div>
 </div>
