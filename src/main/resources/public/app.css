@@ -1,6 +1,7 @@
 body {
   background: #eeeeee;
   font-family: 'Lora', serif;
+  /*text-shadow: 4px 4px 2px rgba(150, 150, 150, 1);*/
 }
 
 a, a:hover, a:visited, a:active {
@@ -44,6 +45,8 @@ h1, h2, h3 {
 #class-enroll h3 {
   margin: 5px;
 }
+<<<<<<< HEAD
+=======
 
 .students-enrolled {
   padding-top: 20%;
@@ -63,3 +66,4 @@ h1, h2, h3 {
   padding-left: 1.25%;
   padding-right: 1.25%;
 }
+>>>>>>> d70e3b2604cdda1622f3dcbabbb6fd0d95840f45
