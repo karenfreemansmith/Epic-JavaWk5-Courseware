@@ -1,4 +1,4 @@
-<h3>Teacher Lesson</h3>
+<h3>Lesson Planning</h3>
 <p><a href="/">Home</a>: <a href="/teachers/$teacher_id">Teacher</a>: <a href="/teachers/$teacher_id/courses/$course_id">Course</a>: <a href="/teachers/$teacher_id/courses/$course_id/lessons/$lesson.getId()">Lesson</a>: <p>
 
 <p>$lesson.getName()</p>
@@ -13,11 +13,11 @@
     <input type="text" class="form-control" name="name" value="$lesson.getName()">
   </div>
   <div class="form-group">
-    <label for="lecture">Lessons Lecture:</label>
+    <label for="lecture">Lesson Lecture:</label>
     <textarea name="lecture" id="lecture"> $lesson.getLecture()</textarea>
   </div>
   <div class="form-group">
-    <label for="reading">Lessons Reading:</label>
+    <label for="reading">Lesson Reading:</label>
     <input type="text" name="reading" class="form-control" id="reading" value="$lesson.getReading()">
   </div>
   <button type="submit" class="btn btn-default">Update Lesson</button>
