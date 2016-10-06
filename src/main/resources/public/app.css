@@ -21,9 +21,11 @@ a, a:hover, a:visited, a:active {
 
 img {
   margin-top: 5%;
+  border-radius: 25px;
 }
 
 h1, h2, h3 {
+  padding-top: 1.5%;
   font-family: 'Cinzel', serif;
 }
 
@@ -43,6 +45,21 @@ h1, h2, h3 {
   margin: 5px;
 }
 
-#students-enrolled {
+.students-enrolled {
   padding-top: 20%;
+}
+
+#message {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.fa-leaf {
+  color: #2d862d;
+}
+
+.btn-danger {
+  margin-top: 1.5%;
+  padding-left: 1.25%;
+  padding-right: 1.25%;
 }
