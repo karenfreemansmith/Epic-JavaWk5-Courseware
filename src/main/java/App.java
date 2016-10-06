@@ -56,7 +56,7 @@ public class App {
     get("/students/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Student student = Student.find(Integer.parseInt(request.params("id")));
-      model.put("courses", Course.allWithTeachers());
+      model.put("courses", Course.allForStudent(student.getId()));
       model.put("student", student);
       model.put("template", "templates/student.vtl");
       return new ModelAndView(model, layout);
@@ -206,7 +206,7 @@ public class App {
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
       course.delete();
       setFlashMessage(request, "Course deleted!");
-      String urlString = "/teachers/" + teacher_id + "/courses/" + course.getId();
+      String urlString = "/teachers/" + teacher_id;
       response.redirect(urlString);
       return null;
     });
