@@ -43,6 +43,15 @@ h1, h2, h3 {
   margin: 5px;
 }
 
-#students-enrolled {
+.students-enrolled {
   padding-top: 20%;
+}
+
+#message {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.fa-leaf {
+  color: #2d862d;
 }
