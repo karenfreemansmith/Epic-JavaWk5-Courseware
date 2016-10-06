@@ -1,24 +1,22 @@
-<h3>Our Teachers</h3>
-<p><a href="/">Home</a></p>
-
+<h2><strong>Our Teachers</strong></h2>
 <div class="row">
-  <div class="col-sm-8">
+  <div class="col-sm-6">
     <div class="row">
       #if($teachers)
         #foreach($teacher in $teachers)
-          <div class="col-xs-4">
-            <h3><a href="/teachers/$teacher.getId()">$teacher.getName()</a></h3>
+          <div class="col-sm-3">
+            <h3><a href="/teachers/$teacher.getId()" class="thumbnail">$teacher.getName()</a></h3>
           </div>
         #end
       #end
     </div>
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-6">
     <h3>Become a Teacher!</h3>
     <p>Sign up to become a teacher at Online University.</p>
     <form action='/teachers' method="post">
       <div class="form-group">
-        <label for="name">Teacher Name: </label>
+        <label for="name">Your Name: </label>
         <input id="name" name="name" class="form-control" type="text" required>
       </div>
       <button type='submit' class='btn'>Sign Up!</button>

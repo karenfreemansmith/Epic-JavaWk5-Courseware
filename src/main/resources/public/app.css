@@ -14,6 +14,11 @@ a, a:hover, a:visited, a:active {
   text-align: center;
 }
 
+.bottom {
+  border-bottom: 1px solid purple;
+  padding-bottom: 15px;
+}
+
 .col-sm-4 i {
   font-size: 4em;
   color: purple;
@@ -45,8 +50,6 @@ h1, h2, h3 {
 #class-enroll h3 {
   margin: 5px;
 }
-<<<<<<< HEAD
-=======
 
 .students-enrolled {
   padding-top: 20%;
@@ -66,4 +69,11 @@ h1, h2, h3 {
   padding-left: 1.25%;
   padding-right: 1.25%;
 }
->>>>>>> d70e3b2604cdda1622f3dcbabbb6fd0d95840f45
+
+.thumbnail {
+  width: 125px;
+  height: 125px;
+  text-align: center;
+  padding-top: 15px;
+  background-color: lavender;
+}
