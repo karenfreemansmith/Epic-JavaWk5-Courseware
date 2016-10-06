@@ -1,6 +1,7 @@
 body {
   background: #eeeeee;
   font-family: 'Lora', serif;
+  /*text-shadow: 4px 4px 2px rgba(150, 150, 150, 1);*/
 }
 
 a, a:hover, a:visited, a:active {
@@ -11,6 +12,11 @@ a, a:hover, a:visited, a:active {
 
 .front-page {
   text-align: center;
+}
+
+.bottom {
+  border-bottom: 1px solid purple;
+  padding-bottom: 15px;
 }
 
 .col-sm-4 i {
@@ -62,4 +68,12 @@ h1, h2, h3 {
   margin-top: 1.5%;
   padding-left: 1.25%;
   padding-right: 1.25%;
+}
+
+.thumbnail {
+  width: 125px;
+  height: 125px;
+  text-align: center;
+  padding-top: 15px;
+  background-color: lavender;
 }

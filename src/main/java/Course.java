@@ -1,6 +1,9 @@
 import java.util.List;
 import java.util.ArrayList;
 import org.sql2o.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collections;
 
 //TODO: add a method to retrieve only courses with active teacher
 
@@ -182,7 +185,7 @@ public class Course {
   }
 
   public static List<Course> all() {
-    String sql = "SELECT * FROM courses ORDER BY name";
+    String sql = "SELECT * FROM courses ORDER BY UPPER(name)";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .executeAndFetch(Course.class);
@@ -190,11 +193,32 @@ public class Course {
   }
 
   public static List<Course> allWithTeachers() {
-    String sql = "SELECT * FROM courses WHERE teacher_id != :no_teacher ORDER BY name";
+    String sql = "SELECT * FROM courses WHERE teacher_id != :no_teacher ORDER BY UPPER(name)";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .addParameter("no_teacher", NO_TEACHER)
         .executeAndFetch(Course.class);
+    }
+  }
+
+  //outer join???????
+  public static List<Course> allForStudent(int student_id) {
+    String sql = "SELECT courses.* FROM courses LEFT OUTER JOIN enrollment ON (enrollment.course_id = courses.id) WHERE enrollment.student_id != :student_id OR enrollment.student_id IS NULL ORDER BY UPPER(name)";
+    try(Connection con = DB.sql2o.open()) {
+      List<Course> unenrolledCourses =  con.createQuery(sql)
+        .addParameter("student_id", student_id)
+        .executeAndFetch(Course.class);
+      List<Course> filteredCourses = new ArrayList<Course>();
+      for(Course course : unenrolledCourses){
+        if(course.teacher_id != NO_TEACHER && !filteredCourses.contains(course)){
+          filteredCourses.add(course);
+        }
+      }
+      Collections.sort(filteredCourses, (course1, course2) -> course1.getName().compareTo(course2.getName()));
+      return filteredCourses;
+      // return  con.createQuery(sql)
+      //   .addParameter("student_id", student_id)
+      //   .executeAndFetch(Course.class);
     }
   }
 

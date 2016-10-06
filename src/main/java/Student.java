@@ -55,7 +55,7 @@ public class Student {
 
   public double getGradeAvgForCourse(int course_id){
     try(Connection con = DB.sql2o.open()){
-      String sql = "SELECT grade FROM assignments JOIN lessons ON (lessons.id = assignments.lesson_id) WHERE lessons.course_id = :course_id AND assignments.student_id = :id";
+      String sql = "SELECT grade FROM assignments JOIN lessons ON (lessons.id = assignments.lesson_id) WHERE lessons.course_id = :course_id AND assignments.student_id = :id AND assignments.grade IS NOT NULL";
       List<Integer> grades = con.createQuery(sql)
         .addParameter("course_id", course_id)
         .addParameter("id", id)
@@ -72,7 +72,7 @@ public class Student {
 
   public Double getGradeAvg(){
     try(Connection con = DB.sql2o.open()){
-      String sql = "SELECT grade FROM assignments WHERE assignments.student_id = :id";
+      String sql = "SELECT grade FROM assignments WHERE assignments.student_id = :id AND grade IS NOT NULL";
       List<Integer> grades = con.createQuery(sql)
         .addParameter("id", id)
         .executeAndFetch(Integer.class);

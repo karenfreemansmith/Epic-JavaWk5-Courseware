@@ -11,13 +11,59 @@
   </head>
   <body>
     <div class="container">
-      <h1 class="front-page"><a id="headline" href="/">Online University</a></h1>
-      <h2 class="front-page">Learn from Home on your Own Schedule!</h2>
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">OU</a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="/students">Enroll in OU<span class="sr-only">(current)</span></a></li>
+              <li><a href="/courses">Browse Courses</a></li>
+              <li><a href="/teachers">Become a Teacher!</a></li>
+              <li class="dropdown">
+                <a href="/students" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Students<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/students">Student Portal</a></li>
+                  <li><a href="#">(WIP) My Courses</a></li>
+                  <li><a href="#">(WIP) My Assignments</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/courses">Browse All Courses</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="/teachers" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Teachers<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/teachers">Teacher Portal</a></li>
+                  <li><a href="#">(WIP) My Courses</a></li>
+                  <li><a href="#">(WIP) Assignments Pending Review</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+
+        <h1 class="front-page"><a id="headline" href="/">Online University</a></h1>
+        <h2 class="front-page bottom">Learn from Home on your Own Schedule!</h2>
+        <hr>
       #if($message)
         <h4 id="message">$message<i class="fa fa-leaf"></i></h4>
       #end
 
+
       #parse( $template )
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </body>
 </html>

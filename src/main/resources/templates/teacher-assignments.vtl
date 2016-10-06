@@ -7,6 +7,17 @@
 </p>
 #if($assignment.getGrade() > 0)
 <p>Grade: $assignment.getGrade()</p>
+<form class="form-inline" action="/teachers/$teacher_id/courses/$course_id/lessons/$lesson_id/assignments/$assignment.getId()" method="post">
+  <div class="form-group">
+    <label for="grade">Edit Grade: </label>
+    <input type="number" name="grade" class="form-control" value="$assignment.getGrade()">
+  </div>
+  <div class="form-group">
+    <label for="teacher_id">Id: </label>
+    <input type="number" name="teacher_id" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-default" name="button">Add Grade</button>
+</form>
 #else
 <form class="form-inline" action="/teachers/$teacher_id/courses/$course_id/lessons/$lesson_id/assignments/$assignment.getId()" method="post">
   <div class="form-group">
