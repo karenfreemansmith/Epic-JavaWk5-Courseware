@@ -47,6 +47,7 @@ public class App {
       Student student = new Student(request.queryParams("name"));
       Course course = Course.find(Integer.parseInt(request.queryParams("course")));
       student.enroll(course.getId());
+      model.put("courses", Course.allWithTeachers());
       model.put("student", student);
       model.put("template", "templates/student.vtl");
       return new ModelAndView(model, layout);
@@ -161,6 +162,8 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("teacherId")));
+      // Student student = Student.find(course.get());
+      // model.put("student", student);
       model.put("teacher", teacher);
       model.put("course", course);
       model.put("subjects", Course.Subjects.values());
