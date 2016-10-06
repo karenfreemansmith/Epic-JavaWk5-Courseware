@@ -1,13 +1,11 @@
-
+<p class="pull-left"><a href="/">Home</a>: <a href="/teachers/$teacher.getId()">Teacher</a>:</p>
+<br>
+<br>
 <h3>$teacher.getName()</h3>
 <h4>Instructor Dashboard</h4>
 
-
 <div class="row">
   <div class="col-sm-6">
-    <p class="pull-left"><a href="/">Home</a>: <a href="/teachers/$teacher.getId()">Teacher</a>:</p>
-    <br>
-    <br>
     <p>Create Course Form for more courses...</p>
     <form action="/teachers/$teacher.getId()" method="post">
       <div class="form-group">
@@ -30,17 +28,26 @@
     </form>
   </div>
   <div class="col-sm-3">
-    <p>List of <a href="/teachers/$teacher.getId()/courses/1">Courses</a> taught by this teacher.</p>
-    #foreach($course in $teacher.getAllCourses())
-      <li><a href="/teachers/$teacher.getId()/courses/$course.getId()">$course.getName()</a> #if($course.hasUngraded()) !!! #end</li>
+    <h3>$teacher.getName()'s Courses</h3>
+    #if($teacher.getAllCourses().size() > 0)
+      #foreach($course in $teacher.getAllCourses())
+        <li><a href="/teachers/$teacher.getId()/courses/$course.getId()">$course.getName()</a> #if($course.hasUngraded()) !!! #end</li>
+      #end
+    #else
+      Hi, $teacher.getName(). Use the form on the left to create your first course.
     #end
   </div>
   <div class="col-sm-3">
-    <p>All students taught by $teacher.getName().</p>
-    #foreach($course in $teacher.getAllCourses())
-      #foreach($student in $course.getStudents())
-        <li><a href="/students/$student.getId()">$student.getName()</a></li>
+    <h3>$teacher.getName()'s Students</h3>
+    #if($course.getStudents().size() > 0)
+      <p>$teacher.getName()'s Students</p>
+      #foreach($course in $teacher.getAllCourses())
+        #foreach($student in $course.getStudents())
+          <li><a href="/students/$student.getId()">$student.getName()</a></li>
+        #end
       #end
+    #else
+      <p>Your student roster is empty. Recruit or perish!</p>
     #end
   </div>
 </div>
