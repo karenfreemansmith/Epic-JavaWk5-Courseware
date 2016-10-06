@@ -12,6 +12,8 @@ import static spark.Spark.*;
 
 public class App {
   private static final String FLASH_MESSAGE_KEY = "flash_message";
+  private static final String USER_ID_KEY = "user_id";
+  private static final String USER_TYPE_KEY = "user_type";
 
   public static void main(String[] args) {
     staticFileLocation("/public");
@@ -27,13 +29,75 @@ public class App {
     }
 
     setPort(port);
+    //before filters
+    before("/teachers/:id/*", (request, response) -> {
+      String usertype = request.session().attribute(USER_TYPE_KEY);
+      Integer userid = request.session().attribute(USER_ID_KEY);
+      if(userid == null){
+        setFlashMessage(request, "You need to log in to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(!usertype.equals("teacher")){
+        setFlashMessage(request, "You need to be a teacher to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(userid != Integer.parseInt(request.params("id"))){
+        setFlashMessage(request, "Sorry, you are not authorized to see this!");
+        response.redirect("/teachers/" + userid);
+        halt();
+      }
+    });
+
+    before("/students/:id/*", (request, response) -> {
+      String usertype = request.session().attribute(USER_TYPE_KEY);
+      Integer userid = request.session().attribute(USER_ID_KEY);
+      if(userid == null){
+        setFlashMessage(request, "You need to log in to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(!usertype.equals("student")){
+        setFlashMessage(request, "You need to be a student to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(userid != Integer.parseInt(request.params("id"))){
+        setFlashMessage(request, "Sorry, you are not authorized to see this!");
+        response.redirect("/students/" + userid);
+        halt();
+      }
+    });
 
     //main home page
     get("/", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/index.vtl");
+      model.put("message", captureFlashMessage(request));
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+    //login page
+    get("/login", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/login.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+    //post for login page
+    post("/login", (request, response) -> {
+      String username = request.queryParams("username");
+      String type = request.queryParams("type");
+      if(type.equals("student")){
+        Student student = Student.findByName(username);
+        request.session().attribute(USER_ID_KEY, student.getId());
+        request.session().attribute(USER_TYPE_KEY, "student");
+        setFlashMessage(request, "Hello, " + student.getName() + " Thank you for logging in!");
+        response.redirect("/students/" + student.getId());
+      } else {
+        Teacher teacher = Teacher.findByName(username);
+        request.session().attribute(USER_ID_KEY, teacher.getId());
+        request.session().attribute(USER_TYPE_KEY, "teacher");
+        setFlashMessage(request, "Hello, " + teacher.getName() + " Thank you for logging in!");
+        response.redirect("/teachers/" + teacher.getId());
+      }
+      return null;
+    });
     //main student page - signup/register/signin
     get("/students", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
@@ -57,6 +121,7 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       Student student = Student.find(Integer.parseInt(request.params("id")));
       model.put("courses", Course.allForStudent(student.getId()));
+      model.put("message", captureFlashMessage(request));
       model.put("student", student);
       model.put("template", "templates/student.vtl");
       return new ModelAndView(model, layout);
@@ -74,6 +139,8 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
       Student student = Student.find(Integer.parseInt(request.params("studentId")));
+      Teacher teacher = Teacher.find(course.getTeacherId());
+      model.put("teacher", teacher);
       model.put("student", student);
       model.put("course", course);
       model.put("template", "templates/student-courses.vtl");
@@ -158,6 +225,7 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("id")));
       model.put("teacher", teacher);
+      model.put("message", captureFlashMessage(request));
       model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/teacher.vtl");
       return new ModelAndView(model, layout);
@@ -419,4 +487,5 @@ public class App {
     }
     return message;
   }
+
 }

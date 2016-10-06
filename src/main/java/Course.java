@@ -161,7 +161,7 @@ public class Course {
 
   public List<Student> getStudents() {
     try(Connection con =DB.sql2o.open()) {
-      String sql = "SELECT * FROM users INNER JOIN students ON (students.user_id = users.id) INNER JOIN enrollment ON (enrollment.student_id=students.id) WHERE enrollment.course_id=:id";
+      String sql = "SELECT users.name, students.id, students.user_id FROM users INNER JOIN students ON (students.user_id = users.id) INNER JOIN enrollment ON (enrollment.student_id=students.id) WHERE enrollment.course_id=:id";
       return con.createQuery(sql)
         .addParameter("id", this.id)
         .throwOnMappingFailure(false)

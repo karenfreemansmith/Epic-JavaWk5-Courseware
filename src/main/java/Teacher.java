@@ -50,18 +50,31 @@ public class Teacher {
 
   public static List<Teacher> all() {
     try(Connection con =DB.sql2o.open()) {
-      String sql = "SELECT * FROM users INNER JOIN teachers ON (teachers.user_id = users.id)";
+      String sql = "SELECT users.name, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id)";
       return con.createQuery(sql)
         .executeAndFetch(Teacher.class);
     }
   }
 
   public static Teacher find(int id) {
-  String sql = "SELECT * FROM users INNER JOIN teachers ON (teachers.user_id = users.id) WHERE teachers.id = :id";
+  String sql = "SELECT users.name, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id) WHERE teachers.id = :id";
   try(Connection con = DB.sql2o.open()) {
     return con.createQuery(sql)
       .addParameter("id", id)
       .executeAndFetchFirst(Teacher.class);
+    }
+  }
+
+  public static Teacher findByName(String name) {
+  String sql = "SELECT users.name, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id) WHERE users.name = :name";
+    try(Connection con = DB.sql2o.open()) {
+      Teacher teacher =  con.createQuery(sql)
+        .addParameter("name", name)
+        .executeAndFetchFirst(Teacher.class);
+        if(teacher == null){
+          throw new UnsupportedOperationException("We're sorry, We could not find that username amongst our teachers!");
+        }
+        return teacher;
     }
   }
 

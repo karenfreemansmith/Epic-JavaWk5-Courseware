@@ -30,7 +30,7 @@ A web-based platform that provides a space for teachers to upload courses that a
   * As a teacher, I want to be able to see my student's grades X
   * As a teacher, I want to be able to be able to access and grade students' assignments X
   * As a teacher, I want to be able to see students' cumulative grades X
-* As a teacher, I want to be able to see all my students by course O
+* As a teacher, I want to be able to see all my students by course X
 * As a teacher, I want to be able to see all my courses X
 * As a teacher, I want to navigate to the courses I am teaching. X
 * As a teacher, I want some indication if I have assignments that need grading (need dashboard something)-
@@ -61,7 +61,7 @@ A web-based platform that provides a space for teachers to upload courses that a
 * As a student, I want to signal my desire for enrollment in a course
 * As a student, I want to see the enrollment conditions for a course
 * As a teacher, I want to set students' assignments to be public or private
-* As a teacher, I want to be notified when a student submits an assignment
+* As a teacher, I want to be notified when a student submits an assignment X
 * As a teacher, I want to take a course.
 * As a teacher, I can set whether a course requires payment or not  (and how much that payment is)
 * As a student, I want to see how much a course costs/filter courses by free/price etc. --> general search function
