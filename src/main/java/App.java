@@ -199,6 +199,17 @@ public class App {
       response.redirect(urlString);
       return null;
     });
+    //delete lesson if teacher wants to delete it
+    post("/teachers/:teacherId/courses/:courseId/delete", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      Course course = Course.find(Integer.parseInt(request.params("courseId")));
+      course.delete();
+      setFlashMessage(request, "Course deleted!");
+      String urlString = "/teachers/" + teacher_id + "/courses/" + course.getId();
+      response.redirect(urlString);
+      return null;
+    });
     post("/teachers/:teacherId/courses/:courseId/lessons/new", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       int course_id = Integer.parseInt(request.params("courseId"));
