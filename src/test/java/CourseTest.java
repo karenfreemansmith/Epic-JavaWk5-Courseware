@@ -117,6 +117,7 @@ public class CourseTest {
     student1.enroll(testCourse.getId());
     student2.enroll(testCourse.getId());
     assertEquals (2, testCourse.getStudents().size());
+    assertTrue(testCourse.getStudents().contains(student1));
   }
 
   @Test

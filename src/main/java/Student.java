@@ -7,6 +7,8 @@ public class Student {
   private int id;
   private int user_id;
 
+  public static final double NO_GRADE = -1;
+
   public Student (String name){
     this.name = name;
     this.save();
@@ -63,7 +65,7 @@ public class Student {
         .average().getAsDouble()*10)/10;
         return average;
       } else {
-        return -1;
+        return NO_GRADE;
       }
     }
   }
@@ -74,9 +76,13 @@ public class Student {
       List<Integer> grades = con.createQuery(sql)
         .addParameter("id", id)
         .executeAndFetch(Integer.class);
-      double average = (double) Math.round(grades.stream().mapToDouble(grade -> grade)
-      .average().getAsDouble()*10)/10;
-      return average;
+      if (grades.size() > 0) {
+        double average = (double) Math.round(grades.stream().mapToDouble(grade -> grade)
+        .average().getAsDouble()*10)/10;
+        return average;
+      } else {
+        return NO_GRADE;
+      }
     }
   }
 

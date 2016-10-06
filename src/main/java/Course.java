@@ -181,7 +181,7 @@ public class Course {
   }
 
   public static List<Course> all() {
-    String sql = "SELECT * FROM courses";
+    String sql = "SELECT * FROM courses ORDER BY name";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .executeAndFetch(Course.class);
@@ -189,7 +189,7 @@ public class Course {
   }
 
   public static List<Course> allWithTeachers() {
-    String sql = "SELECT * FROM courses WHERE teacher_id != :no_teacher";
+    String sql = "SELECT * FROM courses WHERE teacher_id != :no_teacher ORDER BY name";
     try(Connection con = DB.sql2o.open()) {
       return con.createQuery(sql)
         .addParameter("no_teacher", NO_TEACHER)
