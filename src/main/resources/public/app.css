@@ -16,6 +16,7 @@ a, a:hover, a:visited, a:active {
 .col-sm-4 i {
   font-size: 4em;
   color: purple;
+  padding-top: 10%;
 }
 
 img {
@@ -40,4 +41,8 @@ h1, h2, h3 {
 
 #class-enroll h3 {
   margin: 5px;
+}
+
+#students-enrolled {
+  padding-top: 20%;
 }
