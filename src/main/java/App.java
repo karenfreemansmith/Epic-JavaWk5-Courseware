@@ -175,7 +175,7 @@ public class App {
       course.setName(request.queryParams("name"));
       course.setDescription(request.queryParams("description"));
       course.setSubject(request.queryParams("subject"));
-      setFlashMessage(request, "Lesson updated!");
+      setFlashMessage(request, "Course updated!");
       String urlString = "/teachers/" + teacher_id + "/courses/" + course_id;
       response.redirect(urlString);
       return null;
@@ -191,6 +191,7 @@ public class App {
       response.redirect(urlString);
       return null;
     });
+
     //allows teacher to view/edit lessons and add or access assignments for grading
     get("/teachers/:teacherId/courses/:courseId/lessons/:lessonId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
@@ -204,6 +205,20 @@ public class App {
       model.put("template", "templates/teacher-lessons.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+    //post for edit lesson from individual lesson page
+    post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/edit", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
+      lesson.setName(request.queryParams("name"));
+      lesson.setLecture(request.queryParams("lecture"));
+      lesson.setReading(request.queryParams("reading"));
+      setFlashMessage(request, "Lesson updated!");
+      String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson.getId();
+      response.redirect(urlString);
+      return null;
+    });
     // posts from assignments new to teacher/:id/courses/:id/lessons/getId()
     post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/new", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
@@ -214,11 +229,12 @@ public class App {
       String content = request.queryParams("content");
       Assignment assignment = new Assignment(name, content, lesson.getId());
       assignment.save();
+      setFlashMessage(request, "Assignment added!");
       String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson.getId();
       response.redirect(urlString);
       return null;
     });
-    // allows teachers to create assignments, lists student submissions, allows grading if in student submission
+    // allows teachers to access student assignments, allows grading
     get("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
@@ -235,6 +251,7 @@ public class App {
       model.put("template", "templates/teacher-assignments.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+    //adds grade to assignment
     post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
       Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
       double grade = Double.parseDouble(request.queryParams("grade"));
@@ -244,6 +261,20 @@ public class App {
       int lesson_id = Integer.parseInt(request.params("lessonId"));
       setFlashMessage(request, "Grade Added!");
       String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson_id + "/assignments/" + assignment.getId();
+      response.redirect(urlString);
+      return null;
+    });
+    //post for edit assignment - assignments can be edited from their lesson page, so this redirects back to lesson page
+    post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId/edit", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int course_id = Integer.parseInt(request.params("courseId"));
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      int lesson_id = Integer.parseInt(request.params("lessonId"));
+      Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
+      assignment.setName(request.queryParams("name"));
+      assignment.setContent(request.queryParams("content"));
+      setFlashMessage(request, "Assignment updated!");
+      String urlString = "/teachers/" + teacher_id + "/courses/" + course_id + "/lessons/" + lesson_id;
       response.redirect(urlString);
       return null;
     });
@@ -260,6 +291,11 @@ public class App {
     get("/courses/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Course course = Course.find(Integer.parseInt(request.params("id")));
+      Teacher teacher = null;
+      if(course.getTeacherId() != Course.NO_TEACHER){
+        teacher = Teacher.find(course.getTeacherId());
+      }
+      model.put("teacher", teacher);
       model.put("ext", ".jpg");
       model.put("course", course);
       model.put("template", "templates/course.vtl");

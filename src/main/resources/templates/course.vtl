@@ -5,8 +5,15 @@
   <div class="col-sm-6">
     <h3>$course.getName()</h3>
     <p><a href="/">Home</a>: <a href="/courses">Course List</a></p>
+    #if($teacher)
+      <p>Instructor: $teacher.getName()</p>
+    #else
+      <p><strong>This course currently does not have an instructor</strong></p>
+    #end
 
     <p>$course.getDescription()</p>
-    <a href="/students"><button id="class-enroll" class="btn btn-lg pull-right"><h3>Enroll Today!</h3></button></a>
+    <a href="/students"><button id="class-enroll" class="btn btn-lg pull-right" #if(!$teacher)
+      disabled
+    #end><h3>Enroll Today!</h3></button></a>
   </div>
 </div>
