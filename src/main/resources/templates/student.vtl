@@ -2,7 +2,7 @@
 <h4>Student Dashboard</h4>
 <p><a href="/">Home</a>: <a href="/students/$student.getId()">Student</a>: </p>
 
-<p>Your cumulative grade: #if($student.getGradeAvg() > 0) $student.getGradeAvg() #else No grades yet! #end<p>
+<p>Your cumulative grade: #if($student.getGradeAvg() != -1) $student.getGradeAvg() #else No grades yet! #end<p>
 <p>Courses In Which You Are Enrolled</p>
 #if($student.getCourses().size() > 0)
   #foreach($course in $student.getCourses())

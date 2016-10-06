@@ -56,7 +56,7 @@ public class App {
     get("/students/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Student student = Student.find(Integer.parseInt(request.params("id")));
-      model.put("courses", Course.allWithTeachers());
+      model.put("courses", Course.allForStudent(student.getId()));
       model.put("student", student);
       model.put("template", "templates/student.vtl");
       return new ModelAndView(model, layout);
@@ -196,6 +196,17 @@ public class App {
       course.setSubject(request.queryParams("subject"));
       setFlashMessage(request, "Course updated!");
       String urlString = "/teachers/" + teacher_id + "/courses/" + course_id;
+      response.redirect(urlString);
+      return null;
+    });
+    //delete lesson if teacher wants to delete it
+    post("/teachers/:teacherId/courses/:courseId/delete", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int teacher_id = Integer.parseInt(request.params("teacherId"));
+      Course course = Course.find(Integer.parseInt(request.params("courseId")));
+      course.delete();
+      setFlashMessage(request, "Course deleted!");
+      String urlString = "/teachers/" + teacher_id;
       response.redirect(urlString);
       return null;
     });

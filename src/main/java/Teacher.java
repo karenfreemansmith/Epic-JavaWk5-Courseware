@@ -3,6 +3,8 @@ import java.util.List;
 
 public class Teacher {
 
+  //TODO: method for getting all students?
+
   private String name;
   private int id;
   private int user_id;
