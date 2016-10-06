@@ -72,6 +72,15 @@ public class Assignment {
     return date_submitted;
   }
 
+  public void setDateSubmitted() {
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE assignments SET date_submitted=now() WHERE id=:id";
+      con.createQuery(sql)
+      .addParameter("id", id)
+      .executeUpdate();
+    }
+  }
+
   public String getFormattedDate() {
     return DateFormat.getDateTimeInstance().format(date_submitted);
   }
