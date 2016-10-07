@@ -23,18 +23,13 @@
         #end
       </div>
       <div class="col-xs-6">
-        #if($student.getGradeAvgForCourse().size() > 0)
-          <h4 id="students-enrolled">Student's Grade:</h4>
-          #if($student.getGradeAvgForCourse($course.getId()) == -1.0)
-            #foreach($student in $course.getStudents())
-              <li><a href="/students/$student.getId()">$student.getGradeAvgForCourse($course.getId())</a></li>
-            #end
+        <h4 id="students-enrolled">Student's Grade:</h4>
+        #foreach($student in $course.getStudents())
+          #if($student.getGradeAvgForCourse($course.getId()) != -1.0)
+            <li><a href="/students/$student.getId()">$student.getGradeAvgForCourse($course.getId())</a></li>
           #else
-            #foreach($student in $course.getStudents())
-              <li>No grade yet.</li>
-            #end
+            <li>No grade yet.</li>
           #end
-          #else
         #end
       </div>
     </div>

@@ -113,13 +113,16 @@ public class App {
       String name = request.queryParams("name");
       Student.checkDuplicates(name);
       if(Student.checkDuplicates(name) == true) {
+        setFlashMessage(request, "That username has already been taken!");
         response.redirect(url);
         halt();
       }
       Student student = new Student(request.queryParams("name"));
       Course course = Course.find(Integer.parseInt(request.queryParams("course")));
       student.enroll(course.getId());
-      setFlashMessage(request, "That username has already been taken!");
+      request.session().attribute(USER_ID_KEY, student.getId());
+      request.session().attribute(USER_TYPE_KEY, "student");
+      setFlashMessage(request, "Hello, " + student.getName() + "! Thank you for signing up!");
       model.put("courses", Course.allWithTeachers());
       model.put("student", student);
       model.put("template", "templates/student.vtl");
@@ -226,11 +229,14 @@ public class App {
       String url = "/teachers";
       String name = request.queryParams("name");
       if(Student.checkDuplicates(name) == true) {
+        setFlashMessage(request, "That username has already been taken!");
         response.redirect(url);
         halt();
       }
       Teacher teacher = new Teacher(request.queryParams("name"));
-
+      request.session().attribute(USER_ID_KEY, teacher.getId());
+      request.session().attribute(USER_TYPE_KEY, "teacher");
+      setFlashMessage(request, "Hello, " + teacher.getName() + "! Thank you for signing up!");
       response.redirect("/teachers/" + teacher.getId());
       return null;
     });

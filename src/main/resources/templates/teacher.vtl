@@ -15,16 +15,14 @@
     #end
 
     <h3>$teacher.getName()'s Students</h3>
-    #if($course.getStudents().size() > 0)
       <p>$teacher.getName()'s Students</p>
-      #foreach($course in $teacher.getAllCourses())
-        #foreach($student in $course.getStudents())
-          <li><a href="/students/$student.getId()">$student.getName()</a></li>
-        #end
+      #if($teacher.getAllStudents().size() > 0)
+         #foreach($student in $teacher.getAllStudents())
+           <li><a href="/students/$student.getId()">$student.getName()</a></li>
+         #end
+      #else
+        <p>Your student roster is empty.</p>
       #end
-    #else
-      <p>Your student roster is empty.</p>
-    #end
   </div>
   <div class="col-sm-6">
     <form action="/teachers/$teacher.getId()" method="post">
