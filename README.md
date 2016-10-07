@@ -17,7 +17,7 @@ Group Project for Week 5, Java at Epicodus - A web-based platform to create and 
   * As a teacher, I want to be able to see my student's grades X
   * As a teacher, I want to be able to be able to access and grade students' assignments X
   * As a teacher, I want to be able to see students' cumulative grades X
-* As a teacher, I want to be able to see all my students by course O
+* As a teacher, I want to be able to see all my students by course X
 * As a teacher, I want to be able to see all my courses X
 * As a teacher, I want to navigate to the courses I am teaching. X
 * As a teacher, I want some indication if I have assignments that need grading (need dashboard something)-

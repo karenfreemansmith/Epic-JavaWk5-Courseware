@@ -83,3 +83,7 @@ h1, h2, h3 {
   padding-top: 15px;
   background-color: lavender;
 }
+
+.delete-right {
+  text-align: right;
+}
