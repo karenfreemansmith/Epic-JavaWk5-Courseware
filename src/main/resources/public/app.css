@@ -46,12 +46,14 @@ h1, h2, h3 {
   text-decoration: none;
 }
 
-#class-enroll {
+#class-enroll, #student-enroll, #teacher-enroll {
   background-color: purple;
   color: #eee;
 }
 
-#class-enroll h3 {
+#class-enroll h3,
+#student-enroll h3,
+#teacher-enroll h3,  {
   margin: 5px;
 }
 
