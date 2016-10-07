@@ -6,11 +6,17 @@ public class Teacher {
   //TODO: method for getting all students?
 
   private String name;
+  private String surname;
+  private String bio;
+  private String email;
   private int id;
   private int user_id;
 
-  public Teacher (String name){
+  public Teacher (String name, String surname, String email, String bio){
     this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.bio = bio;
     this.save();
   }
 
@@ -20,6 +26,41 @@ public class Teacher {
 
   public String getName () {
     return name;
+  }
+
+  public String getSurname () {
+    return surname;
+  }
+
+  public String getEmail () {
+    return email;
+  }
+
+  public String getBio () {
+    return bio;
+  }
+
+  public void setSurname (String surname) {
+     this.surname = surname;
+     try(Connection con = DB.sql2o.open()){
+       String sql = "UPDATE users SET surname=:surname WHERE id=:user_id";
+       con.createQuery(sql)
+       .addParameter("user_id", user_id)
+       .addParameter("surname", surname)
+       .executeUpdate();
+     }
+  }
+
+  public boolean setBio (String bio) {
+      this.bio = bio;
+      try(Connection con = DB.sql2o.open()){
+        String sql = "UPDATE users SET bio=:bio WHERE id=:user_id";
+        con.createQuery(sql)
+        .addParameter("user_id", user_id)
+        .addParameter("bio", bio)
+        .executeUpdate();
+        return true;
+      }
   }
 
   public void setName (String name) {
@@ -50,7 +91,7 @@ public class Teacher {
 
   public List<Student> getAllStudents() {
     try(Connection con =DB.sql2o.open()) {
-      String sql = "SELECT students.id, students.user_id, users.name FROM courses JOIN enrollment ON (enrollment.course_id = courses.id) JOIN students ON (enrollment.student_id = students.id) JOIN users ON (students.user_id = users.id) WHERE courses.teacher_id=:id";
+      String sql = "SELECT students.id, students.user_id, users.email, users.surname, users.name FROM courses JOIN enrollment ON (enrollment.course_id = courses.id) JOIN students ON (enrollment.student_id = students.id) JOIN users ON (students.user_id = users.id) WHERE courses.teacher_id=:id";
       return con.createQuery(sql)
         .addParameter("id", this.id)
         .executeAndFetch(Student.class);
@@ -59,14 +100,14 @@ public class Teacher {
 
   public static List<Teacher> all() {
     try(Connection con =DB.sql2o.open()) {
-      String sql = "SELECT users.name, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id)";
+      String sql = "SELECT users.name, teachers.id, users.email, users.surname, users.bio, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id)";
       return con.createQuery(sql)
         .executeAndFetch(Teacher.class);
     }
   }
 
   public static Teacher find(int id) {
-  String sql = "SELECT users.name, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id) WHERE teachers.id = :id";
+  String sql = "SELECT users.name, users.email, users.surname, users.bio, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id) WHERE teachers.id = :id";
   try(Connection con = DB.sql2o.open()) {
     return con.createQuery(sql)
       .addParameter("id", id)
@@ -74,14 +115,14 @@ public class Teacher {
     }
   }
 
-  public static Teacher findByName(String name) {
-  String sql = "SELECT users.name, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id) WHERE users.name = :name";
+  public static Teacher findByEmail(String email) {
+  String sql = "SELECT users.name, users.email, users.surname, users.bio, teachers.id, teachers.user_id FROM users INNER JOIN teachers ON (teachers.user_id = users.id) WHERE users.email = :email";
     try(Connection con = DB.sql2o.open()) {
       Teacher teacher =  con.createQuery(sql)
-        .addParameter("name", name)
+        .addParameter("email", email)
         .executeAndFetchFirst(Teacher.class);
         if(teacher == null){
-          throw new UnsupportedOperationException("We're sorry, We could not find that username amongst our teachers!");
+          throw new UnsupportedOperationException("We're sorry, We could not find that email amongst our teachers!");
         }
         return teacher;
     }

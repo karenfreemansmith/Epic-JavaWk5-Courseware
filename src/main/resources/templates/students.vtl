@@ -3,8 +3,16 @@
   <h3>Enroll in an OU Course</h3>
   <form action='/students' method="post">
     <div class="form-group">
-      <label for="name">Student Name: </label>
+      <label for="name">Your Name: </label>
       <input id="name" name="name" class="form-control" type="text" required>
+    </div>
+    <div class="form-group">
+      <label for="surname">Your Surname: </label>
+      <input id="surname" name="surname" class="form-control" type="text" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Your Email: </label>
+      <input id="email" name="email" class="form-control" type="text" required>
     </div>
     <div class="form-group">
       <label for="course">Select a Course to begin: </label>
@@ -22,8 +30,8 @@
   <form class="" action="/login" method="post">
     <input type="hidden" name="type" value="student">
     <div class="form-group">
-      <label for="username">Name: </label>
-      <input type="text" name="username" class="form-control">
+      <label for="email">Email: </label>
+      <input type="text" name="email" class="form-control">
     </div>
     <button type="submit" class="btn btn-default">Log In</button>
   </form>

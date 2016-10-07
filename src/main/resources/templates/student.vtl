@@ -2,7 +2,7 @@
 
 #if($user_id)
   #if($user_id == $student.getId())
-  <h2><strong>$student.getName()'s Student Dashboard</strong></h2>
+  <h2><strong>$student.getName() $student.getSurname()'s Student Dashboard</strong></h2>
   <br>
   <br>
     <div class="row">
@@ -39,7 +39,7 @@
       </div>
     </div>
   #else
-    <h2><strong>$student.getName()</strong></h2>
+    <h2><strong>$student.getName() $student.getSurname()</strong></h2>
     <br>
     <br>
     <p>$student.getName()'s Courses</p>
@@ -50,7 +50,7 @@
     #end
   #end
 #else
-  <h2><strong>$student.getName()</strong></h2>
+  <h2><strong>$student.getName() $student.getSurname()</strong></h2>
   <br>
   <br>
   <p>$student.getName()'s Courses</p>

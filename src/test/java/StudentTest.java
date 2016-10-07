@@ -9,8 +9,8 @@ public class StudentTest {
   @Before
   public void setUp() {
     DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/courseware_test", null, null);
-    student1 = new Student("Brian");
-    student2 = new Student("Karen");
+    student1 = new Student("Brian", "Surname", "email@email.com");
+    student2 = new Student("Karen", "MacSurname", "email@something.com");
   }
 
   @Test
@@ -39,6 +39,13 @@ public class StudentTest {
     student1.setName("Todd");
     Student newStudent = Student.find(student1.getId());
     assertEquals("Todd", newStudent.getName());
+  }
+
+  @Test
+  public void setSurname_updatesSurnameInDatabase_true() {
+    student1.setSurname("Todd");
+    Student newStudent = Student.find(student1.getId());
+    assertEquals("Todd", newStudent.getSurname());
   }
 
   @Test
@@ -97,7 +104,7 @@ public class StudentTest {
   }
 
   @Test public void getGradeAvgByCourse_returnsAvgOfAllGrades_double() {
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -112,7 +119,7 @@ public class StudentTest {
   }
 
   @Test public void getGradeAvg_returnsListOfSubmittedAssignmentsByCourseId_int() {
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -147,10 +154,10 @@ public class StudentTest {
 
   @Test
   public void checkDuplicates_checksForDuplicateNamesInUserDatabase() {
-    Student student3 = new Student("Karen");
+    Student student3 = new Student("Karen", "Von Surname", "email@something.com");
     student2.save();
     student3.save();
-    assertEquals(true, Student.checkDuplicates("Karen"));
+    assertEquals(true, Student.checkDuplicates("email@something.com"));
   }
 
   @After

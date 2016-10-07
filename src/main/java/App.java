@@ -7,8 +7,8 @@ import spark.template.velocity.VelocityTemplateEngine;
 import spark.Request;
 import static spark.Spark.*;
 
-//figure out how to upload images directly
-//add edit paths for everything
+//TODO: delete and update users
+//TODO: add user fields
 
 public class App {
   private static final String FLASH_MESSAGE_KEY = "flash_message";
@@ -74,16 +74,16 @@ public class App {
     }, new VelocityTemplateEngine());
     //post for login page
     post("/login", (request, response) -> {
-      String username = request.queryParams("username");
+      String email = request.queryParams("email");
       String type = request.queryParams("type");
       if(type.equals("student")){
-        Student student = Student.findByName(username);
+        Student student = Student.findByEmail(email);
         request.session().attribute(USER_ID_KEY, student.getId());
         request.session().attribute(USER_TYPE_KEY, "student");
         setFlashMessage(request, "Hello, " + student.getName() + "! Thank you for logging in!");
         response.redirect("/students/" + student.getId());
       } else {
-        Teacher teacher = Teacher.findByName(username);
+        Teacher teacher = Teacher.findByEmail(email);
         request.session().attribute(USER_ID_KEY, teacher.getId());
         request.session().attribute(USER_TYPE_KEY, "teacher");
         setFlashMessage(request, "Hello, " + teacher.getName() + "! Thank you for logging in!");
@@ -111,13 +111,14 @@ public class App {
       Map<String, Object> model = modelWithLogin(request);
       String url = "/students";
       String name = request.queryParams("name");
-      Student.checkDuplicates(name);
-      if(Student.checkDuplicates(name) == true) {
-        setFlashMessage(request, "That username has already been taken!");
+      String email = request.queryParams("email");
+      String surname = request.queryParams("surname");
+      if(Student.checkDuplicates(email) == true) {
+        setFlashMessage(request, "That email already has an account associated with it!");
         response.redirect(url);
         halt();
       }
-      Student student = new Student(request.queryParams("name"));
+      Student student = new Student(name, surname, email);
       Course course = Course.find(Integer.parseInt(request.queryParams("course")));
       student.enroll(course.getId());
       request.session().attribute(USER_ID_KEY, student.getId());
@@ -228,12 +229,15 @@ public class App {
     post("/teachers", (request, response) -> {
       String url = "/teachers";
       String name = request.queryParams("name");
-      if(Student.checkDuplicates(name) == true) {
-        setFlashMessage(request, "That username has already been taken!");
+      String email = request.queryParams("email");
+      String surname = request.queryParams("surname");
+      String bio = request.queryParams("bio");
+      if(Student.checkDuplicates(email) == true) {
+        setFlashMessage(request, "That email is already associated with an account!");
         response.redirect(url);
         halt();
       }
-      Teacher teacher = new Teacher(request.queryParams("name"));
+      Teacher teacher = new Teacher(name, email, surname, bio);
       request.session().attribute(USER_ID_KEY, teacher.getId());
       request.session().attribute(USER_TYPE_KEY, "teacher");
       setFlashMessage(request, "Hello, " + teacher.getName() + "! Thank you for signing up!");

@@ -161,7 +161,7 @@ public class Course {
 
   public List<Student> getStudents() {
     try(Connection con =DB.sql2o.open()) {
-      String sql = "SELECT users.name, students.id, students.user_id FROM users INNER JOIN students ON (students.user_id = users.id) INNER JOIN enrollment ON (enrollment.student_id=students.id) WHERE enrollment.course_id=:id";
+      String sql = "SELECT users.name, users.email, users.surname, students.id, students.user_id FROM users INNER JOIN students ON (students.user_id = users.id) INNER JOIN enrollment ON (enrollment.student_id=students.id) WHERE enrollment.course_id=:id";
       return con.createQuery(sql)
         .addParameter("id", this.id)
         .throwOnMappingFailure(false)
@@ -201,7 +201,6 @@ public class Course {
     }
   }
 
-  //outer join???????
   public static List<Course> allForStudent(int student_id) {
     String sql = "SELECT courses.* FROM courses LEFT OUTER JOIN enrollment ON (enrollment.course_id = courses.id) WHERE enrollment.student_id != :student_id OR enrollment.student_id IS NULL ORDER BY UPPER(name)";
     try(Connection con = DB.sql2o.open()) {
@@ -216,9 +215,6 @@ public class Course {
       }
       Collections.sort(filteredCourses, (course1, course2) -> course1.getName().compareTo(course2.getName()));
       return filteredCourses;
-      // return  con.createQuery(sql)
-      //   .addParameter("student_id", student_id)
-      //   .executeAndFetch(Course.class);
     }
   }
 

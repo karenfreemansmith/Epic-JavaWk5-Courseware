@@ -84,7 +84,7 @@ public class LessonTest {
 
   @Test public void getTeacherAssigments_returnsListOfUnsubmittedAssignments_ArrayList() {
     testLesson.save();
-    Student student = new Student("Selena");
+    Student student = new Student("Karen", "MacSurname", "email@something.com");
     Assignment testAssignment = new Assignment("Weave a Basket", "Step one, weave basket. Take a picture, and turn it in.", testLesson.getId());
     testAssignment.save();
     Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", testLesson.getId(), student.getId());
@@ -95,7 +95,7 @@ public class LessonTest {
 
   @Test public void getStudentAssigments_returnsListOfSubmittedAssignments_ArrayList() {
     testLesson.save();
-    Student student = new Student("Selena");
+    Student student = new Student("Karen", "MacSurname", "email@something.com");
     Assignment testAssignment = new Assignment("Weave a Basket", "Step one, weave basket. Take a picture, and turn it in.", testLesson.getId());
     testAssignment.save();
     Assignment testAssignment2 = new Assignment("Weave a Basket", "Here's my basket, hope it's the best.", testLesson.getId(), student.getId());
@@ -105,7 +105,7 @@ public class LessonTest {
   }
 
   @Test public void hasUngraded_returnsTrueIfThereAreUngradedAssignments_true() {
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -116,7 +116,7 @@ public class LessonTest {
   }
 
   @Test public void hasUngraded_returnsFalseIfAllAssignmentsAreGraded_true() {
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -128,7 +128,7 @@ public class LessonTest {
   }
 
   @Test public void hasUngraded_returnsFalseNoAssignmentsTurnedIn_true() {
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
