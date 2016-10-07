@@ -147,10 +147,13 @@ public class Teacher {
     }
 
   public void save() {
-    String sql = "INSERT INTO users (name) VALUES (:name)";
+    String sql = "INSERT INTO users (name, surname, email, bio) VALUES (:name, :surname, :email, :bio)";
     try(Connection con = DB.sql2o.open()) {
       this.user_id = (int) con.createQuery (sql, true)
       .addParameter("name", name)
+      .addParameter("surname", surname)
+      .addParameter("email", email)
+      .addParameter("bio", bio)
       .executeUpdate()
       .getKey();
       sql = "INSERT INTO teachers (user_id) VALUES (:user_id)";
