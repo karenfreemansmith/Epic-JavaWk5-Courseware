@@ -1,6 +1,6 @@
 <div class="row">
 <div class="col-sm-6">
-  <h2>Enroll in an OU Course</h2>
+  <h3>Enroll in an OU Course</h3>
   <form action='/students' method="post">
     <div class="form-group">
       <label for="name">Student Name: </label>
@@ -15,6 +15,17 @@
       </select>
     </div>
     <button type='submit'id="student-enroll" class='btn'><h3>Sign Up!</h3></button>
+
+  </form>
+  <h3>Already a student?</h3>
+  <h4>Login here!</h4>
+  <form class="" action="/login" method="post">
+    <input type="hidden" name="type" value="student">
+    <div class="form-group">
+      <label for="username">Name: </label>
+      <input type="text" name="username" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-default">Log In</button>
   </form>
 </div>
   <div class="col-sm-4">

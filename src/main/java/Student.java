@@ -88,18 +88,31 @@ public class Student {
 
   public static List<Student> all() {
     try(Connection con =DB.sql2o.open()) {
-      String sql = "SELECT * FROM users INNER JOIN students ON (students.user_id = users.id)";
+      String sql = "SELECT users.name, students.id, students.user_id FROM users INNER JOIN students ON (students.user_id = users.id)";
       return con.createQuery(sql)
         .executeAndFetch(Student.class);
     }
   }
 
   public static Student find(int id) {
-  String sql = "SELECT * FROM users INNER JOIN students ON (students.user_id = users.id) WHERE students.id = :id";
-  try(Connection con = DB.sql2o.open()) {
-    return con.createQuery(sql)
-      .addParameter("id", id)
-      .executeAndFetchFirst(Student.class);
+    String sql = "SELECT users.name, students.id, students.user_id FROM users INNER JOIN students ON (students.user_id = users.id) WHERE students.id = :id";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Student.class);
+    }
+  }
+
+  public static Student findByName(String name) {
+    String sql = "SELECT users.name, students.id, students.user_id FROM users INNER JOIN students ON (students.user_id = users.id) WHERE users.name = :name";
+    try(Connection con = DB.sql2o.open()) {
+      Student student =  con.createQuery(sql)
+        .addParameter("name", name)
+        .executeAndFetchFirst(Student.class);
+      if(student == null){
+        throw new UnsupportedOperationException("We're sorry, We could not find that username amongst our students!");
+      }
+      return student;
     }
   }
 
@@ -171,6 +184,20 @@ public class Student {
         .addParameter("id", id)
         .addParameter("course_id", course_id)
         .executeAndFetch(Assignment.class);
+    }
+  }
+
+  public static Boolean checkDuplicates(String username) {
+    String sql = "SELECT id FROM users WHERE name = :username";
+    try(Connection con = DB.sql2o.open()) {
+      Integer id = con.createQuery(sql)
+      .addParameter("username", username)
+      .executeAndFetchFirst(Integer.class);
+      if(id == null) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 }
