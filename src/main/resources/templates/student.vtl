@@ -38,6 +38,26 @@
         </form>
       </div>
     </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <h3>Edit User Info</h3>
+        <h4>Note: to change your email, please contact an administrator</h4>
+        <form action="/students/$student.getId()/edit" method="post">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" name="name" value="$student.getName()">
+          </div>
+          <div class="form-group">
+            <label for="surname">Surname:</label>
+            <input type="text" class="form-control" name="surname" value="$student.getSurname()">
+          </div>
+          <button type="submit" class="btn btn-default">Update Info</button>
+        </form>
+        <form class="delete-right" action="/students/$student.getId()/delete" method="post">
+          <button type="submit" class="btn btn-danger">Delete Your Account</button>
+        </form>
+      </div>
+    </div>
   #else
     <h2><strong>$student.getName() $student.getSurname()</strong></h2>
     <br>

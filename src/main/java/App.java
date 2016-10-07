@@ -124,10 +124,8 @@ public class App {
       request.session().attribute(USER_ID_KEY, student.getId());
       request.session().attribute(USER_TYPE_KEY, "student");
       setFlashMessage(request, "Hello, " + student.getName() + "! Thank you for signing up!");
-      model.put("courses", Course.allWithTeachers());
-      model.put("student", student);
-      model.put("template", "templates/student.vtl");
-      return new ModelAndView(model, layout);
+      response.redirect("/students/" + student.getId());
+      return null;
     }, new VelocityTemplateEngine());
     //individual sudent page, shows courses enrolled in and allows new enrollments
     get("/students/:id", (request, response) -> {
@@ -144,6 +142,26 @@ public class App {
       Student student = Student.find(Integer.parseInt(request.params("id")));
       student.enroll(course.getId());
       response.redirect("/students/" + student.getId());
+      return null;
+    });
+    post("/students/:studentId/edit", (request, response) -> {
+      Student student = Student.find(Integer.parseInt(request.params("studentId")));
+      student.setName(request.queryParams("name"));
+      student.setSurname(request.queryParams("surname"));
+      setFlashMessage(request, "User info updated!");
+      String urlString = "/students/" + student.getId();
+      response.redirect(urlString);
+      return null;
+    });
+    //delete lesson if teacher wants to delete it
+    post("/students/:studentId/delete", (request, response) -> {
+      Student student = Student.find(Integer.parseInt(request.params("studentId")));
+      student.delete();
+      setFlashMessage(request, "Student deleted!");
+      request.session().removeAttribute(USER_ID_KEY);
+      request.session().removeAttribute(USER_TYPE_KEY);
+      String urlString = "/students";
+      response.redirect(urlString);
       return null;
     });
     //page where students can view a course they are enrolled in and links to lessons
@@ -237,7 +255,7 @@ public class App {
         response.redirect(url);
         halt();
       }
-      Teacher teacher = new Teacher(name, email, surname, bio);
+      Teacher teacher = new Teacher(name, surname, email, bio);
       request.session().attribute(USER_ID_KEY, teacher.getId());
       request.session().attribute(USER_TYPE_KEY, "teacher");
       setFlashMessage(request, "Hello, " + teacher.getName() + "! Thank you for signing up!");
@@ -263,6 +281,27 @@ public class App {
       model.put("template", "templates/teacher.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+    post("/teachers/:teacherId/edit", (request, response) -> {
+      Teacher teacher = Teacher.find(Integer.parseInt(request.params("teacherId")));
+      teacher.setName(request.queryParams("name"));
+      teacher.setSurname(request.queryParams("surname"));
+      teacher.setBio(request.queryParams("bio"));
+      setFlashMessage(request, "User info updated!");
+      String urlString = "/teachers/" + teacher.getId();
+      response.redirect(urlString);
+      return null;
+    });
+    //delete lesson if teacher wants to delete it
+    post("/teachers/:teacherId/delete", (request, response) -> {
+      Teacher teacher = Teacher.find(Integer.parseInt(request.params("teacherId")));
+      teacher.delete();
+      setFlashMessage(request, "Teacher deleted!");
+      request.session().removeAttribute(USER_ID_KEY);
+      request.session().removeAttribute(USER_TYPE_KEY);
+      String urlString = "/teachers";
+      response.redirect(urlString);
+      return null;
+    });
     //allows teacher to view/edit course, add lessons
     get("/teachers/:teacherId/courses/:courseId", (request, response) -> {
       Map<String, Object> model = modelWithLogin(request);
