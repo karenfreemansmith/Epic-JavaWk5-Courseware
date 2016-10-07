@@ -2,52 +2,67 @@
 <br>
 <br>
 <h3>$teacher.getName()</h3>
-<h4>Instructor Dashboard</h4>
-
-<div class="row">
-  <div class="col-sm-6">
-    <p>Create Course Form for more courses...</p>
-    <form action="/teachers/$teacher.getId()" method="post">
-      <div class="form-group">
-        <label for="title">Course Title:</label>
-        <input type="text" class="form-control" name="title">
+#if($user_id)
+  #if($user_id == $teacher.getId())
+  <h4>Instructor Dashboard</h4>
+    <div class="row">
+      <div class="col-sm-6">
+        <p>Create Course Form for more courses...</p>
+        <form action="/teachers/$teacher.getId()" method="post">
+          <div class="form-group">
+            <label for="title">Course Title:</label>
+            <input type="text" class="form-control" name="title">
+          </div>
+          <div class="form-group">
+            <label for="description">Course Description:</label>
+            <textarea name="description" id="description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="subject">Course Subject:</label>
+            <select class="form-control" name="subject">
+              #foreach($subject in $subjects)
+                <option>$subject.toString()</option>
+              #end
+            </select>
+          </div>
+          <button type="submit" class="btn btn-default">Add Course</button>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="description">Course Description:</label>
-        <textarea name="description" id="description"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="subject">Course Subject:</label>
-        <select class="form-control" name="subject">
-          #foreach($subject in $subjects)
-            <option>$subject.toString()</option>
+      <div class="col-sm-3">
+        <h3>$teacher.getName()'s Courses</h3>
+        #if($teacher.getAllCourses().size() > 0)
+          #foreach($course in $teacher.getAllCourses())
+            <li><a href="/teachers/$teacher.getId()/courses/$course.getId()">$course.getName()</a> #if($course.hasUngraded()) Not Graded #end</li>
           #end
-        </select>
+        #else
+          Hi, $teacher.getName(). Use the form on the left to create your first course.
+        #end
       </div>
-      <button type="submit" class="btn btn-default">Add Course</button>
-    </form>
-  </div>
-  <div class="col-sm-3">
-    <h3>$teacher.getName()'s Courses</h3>
+      <div class="col-sm-3">
+        <h3>$teacher.getName()'s Students</h3>
+          <p>$teacher.getName()'s Students</p>
+          #if($teacher.getAllStudents().size() > 0)
+            #foreach($student in $teacher.getAllStudents())
+              <li><a href="/students/$student.getId()">$student.getName()</a></li>
+            #end
+          #else
+            <p>Your student roster is empty. Recruit or perish!</p>
+          #end
+      </div>
+    </div>
+  #else
+    <p>$teacher.getName()'s Courses</p>
     #if($teacher.getAllCourses().size() > 0)
       #foreach($course in $teacher.getAllCourses())
-        <li><a href="/teachers/$teacher.getId()/courses/$course.getId()">$course.getName()</a> #if($course.hasUngraded()) Not Graded #end</li>
+        <li><a href="/courses/$course.getId()">$course.getName()</a></li>
       #end
-    #else
-      Hi, $teacher.getName(). Use the form on the left to create your first course.
     #end
-  </div>
-  <div class="col-sm-3">
-    <h3>$teacher.getName()'s Students</h3>
-    #if($course.getStudents().size() > 0)
-      <p>$teacher.getName()'s Students</p>
-      #foreach($course in $teacher.getAllCourses())
-        #foreach($student in $course.getStudents())
-          <li><a href="/students/$student.getId()">$student.getName()</a></li>
-        #end
-      #end
-    #else
-      <p>Your student roster is empty. Recruit or perish!</p>
+  #end
+#else
+  <p>$teacher.getName()'s Courses</p>
+  #if($teacher.getAllCourses().size() > 0)
+    #foreach($course in $teacher.getAllCourses())
+      <li><a href="/courses/$course.getId()">$course.getName()</a></li>
     #end
-  </div>
-</div>
+  #end
+#end
