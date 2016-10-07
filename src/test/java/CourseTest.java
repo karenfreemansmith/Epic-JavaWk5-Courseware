@@ -112,8 +112,8 @@ public class CourseTest {
   @Test
   public void getStudents_returnsAllStudents_true() {
     testCourse.save();
-    Student student1 = new Student("Brian");
-    Student student2 = new Student("Karen");
+    Student student1 = new Student("Brian", "Surname", "email@email.com");
+    Student student2 = new Student("Karen", "MacSurname", "email@something.com");
     student1.enroll(testCourse.getId());
     student2.enroll(testCourse.getId());
     assertEquals (2, testCourse.getStudents().size());
@@ -122,10 +122,10 @@ public class CourseTest {
 
   @Test
   public void allWithTeachers_returnsAllCoursesWithTeachersAssigned_true() {
-    Teacher teacher1 = new Teacher("Lenore");
+    Teacher teacher1 = new Teacher("Brian", "Surname", "email@otheremail.com", "First degree black belt in teaching things");
     Course testCourse1 = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher1.getId());
     testCourse1.save();
-    Teacher teacher2 = new Teacher("Brian");
+    Teacher teacher2 = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course testCourse2 = new Course("Intro to the Dark Arts", "Teaches you the Dark Arts", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher2.getId());
     testCourse2.save();
     teacher2.delete();
@@ -135,7 +135,7 @@ public class CourseTest {
   }
 
   @Test public void hazUngraded_returnsFalseIfAllAssignmentsAreGraded_true() {
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -147,7 +147,7 @@ public class CourseTest {
   }
 
   @Test public void hazUngraded_returnsFalseNoAssignmentsTurnedIn_true() {
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());

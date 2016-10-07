@@ -9,8 +9,8 @@ public class TeacherTest {
   @Before
   public void setUp() {
     DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/courseware_test", null, null);
-    teacher1 = new Teacher("Brian");
-    teacher2 = new Teacher("Karen");
+    teacher1 = new Teacher("Brian", "Surname", "email@otheremail.com", "First degree black belt in teaching things");
+    teacher2 = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
   }
 
   @Test
@@ -42,9 +42,28 @@ public class TeacherTest {
   }
 
   @Test
+  public void setSurname_updatesSurnameInDatabase_true() {
+    teacher1.setSurname("Todd");
+    Teacher newTeacher = Teacher.find(teacher1.getId());
+    assertEquals("Todd", newTeacher.getSurname());
+  }
+
+  @Test
+  public void setBio_updatesBioInDatabase_true() {
+    teacher1.setBio("Todd");
+    Teacher newTeacher = Teacher.find(teacher1.getId());
+    assertEquals("Todd", newTeacher.getBio());
+  }
+
+  @Test
   public void find_returnsCorrectTeacher_true() {
     assertTrue(Teacher.find(teacher1.getId()).equals(teacher1));
   }
+
+  // @Test
+  // public void findByEmail_returnsCorrectTeacher_true() {
+  //   assertEquals(teacher1, Teacher.findByName(teacher1.getEmail()));
+  // }
 
   @Test
   public void all_returnsAllInstances_true() {

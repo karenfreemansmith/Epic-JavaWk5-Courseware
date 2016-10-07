@@ -94,7 +94,7 @@ public class AssignmentTest {
 
   @Test
   public void grade_updatesGradeOnTurnedInAssignment_float(){
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -108,7 +108,7 @@ public class AssignmentTest {
 
   @Test(expected=IllegalArgumentException.class)
   public void grade_throwsExceptionIfTeacherIdDoesNotMatch(){
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
@@ -120,7 +120,7 @@ public class AssignmentTest {
 
   @Test(expected=UnsupportedOperationException.class)
   public void grade_throwsExceptionIfAssignmentNotTurnedIn(){
-    Teacher teacher = new Teacher("Steve");
+    Teacher teacher = new Teacher("Karen", "MacSurname", "email@moreemail.com", "Seventy three Ph.Ds from ITT Technical Institute");
     Course course = new Course("Intro to Basket Weaving", "Teaches you to weave baskets", Course.Subjects.SUBJECT_CRAFTS.toString(), teacher.getId());
     course.save();
     Lesson lesson = new Lesson("Basket Weaving With Palm Fronds", "Fronds Are Your Friends, by Palm Palmerson chapter 7", "palms palms palms palmitty palms", course.getId());
