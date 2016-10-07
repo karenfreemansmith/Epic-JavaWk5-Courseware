@@ -12,6 +12,8 @@ import static spark.Spark.*;
 
 public class App {
   private static final String FLASH_MESSAGE_KEY = "flash_message";
+  private static final String USER_ID_KEY = "user_id";
+  private static final String USER_TYPE_KEY = "user_type";
 
   public static void main(String[] args) {
     staticFileLocation("/public");
@@ -27,23 +29,86 @@ public class App {
     }
 
     setPort(port);
+    //before filters
+    before("/teachers/:id/*", (request, response) -> {
+      String usertype = request.session().attribute(USER_TYPE_KEY);
+      Integer userid = request.session().attribute(USER_ID_KEY);
+      if(userid == null){
+        setFlashMessage(request, "You need to log in to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(!usertype.equals("teacher")){
+        setFlashMessage(request, "You need to be a teacher to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(userid != Integer.parseInt(request.params("id"))){
+        setFlashMessage(request, "Sorry, you are not authorized to see this!");
+        response.redirect("/teachers/" + userid);
+        halt();
+      }
+    });
+
+    before("/students/:id/*", (request, response) -> {
+      String usertype = request.session().attribute(USER_TYPE_KEY);
+      Integer userid = request.session().attribute(USER_ID_KEY);
+      if(userid == null){
+        setFlashMessage(request, "You need to log in to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(!usertype.equals("student")){
+        setFlashMessage(request, "You need to be a student to see this page!");
+        response.redirect("/");
+        halt();
+      } else if(userid != Integer.parseInt(request.params("id"))){
+        setFlashMessage(request, "Sorry, you are not authorized to see this!");
+        response.redirect("/students/" + userid);
+        halt();
+      }
+    });
 
     //main home page
     get("/", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       model.put("template", "templates/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
+    //post for login page
+    post("/login", (request, response) -> {
+      String username = request.queryParams("username");
+      String type = request.queryParams("type");
+      if(type.equals("student")){
+        Student student = Student.findByName(username);
+        request.session().attribute(USER_ID_KEY, student.getId());
+        request.session().attribute(USER_TYPE_KEY, "student");
+        setFlashMessage(request, "Hello, " + student.getName() + "! Thank you for logging in!");
+        response.redirect("/students/" + student.getId());
+      } else {
+        Teacher teacher = Teacher.findByName(username);
+        request.session().attribute(USER_ID_KEY, teacher.getId());
+        request.session().attribute(USER_TYPE_KEY, "teacher");
+        setFlashMessage(request, "Hello, " + teacher.getName() + "! Thank you for logging in!");
+        response.redirect("/teachers/" + teacher.getId());
+      }
+      return null;
+    });
+    //Log out
+    post("/logout", (request, response) -> {
+      request.session().removeAttribute(USER_ID_KEY);
+      request.session().removeAttribute(USER_TYPE_KEY);
+      setFlashMessage(request, "Logged out");
+      response.redirect("/");
+      return null;
+    });
     //main student page - signup/register/signin
     get("/students", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       model.put("students", Student.all());
       model.put("courses", Course.allWithTeachers());
       model.put("template", "templates/students.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     post("/students", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       String url = "/students";
       String name = request.queryParams("name");
       Student.checkDuplicates(name);
@@ -62,7 +127,7 @@ public class App {
     }, new VelocityTemplateEngine());
     //individual sudent page, shows courses enrolled in and allows new enrollments
     get("/students/:id", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Student student = Student.find(Integer.parseInt(request.params("id")));
       model.put("courses", Course.allForStudent(student.getId()));
       model.put("student", student);
@@ -79,9 +144,11 @@ public class App {
     });
     //page where students can view a course they are enrolled in and links to lessons
     get("/students/:studentId/courses/:courseId", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
       Student student = Student.find(Integer.parseInt(request.params("studentId")));
+      Teacher teacher = Teacher.find(course.getTeacherId());
+      model.put("teacher", teacher);
       model.put("student", student);
       model.put("course", course);
       model.put("template", "templates/student-courses.vtl");
@@ -89,7 +156,7 @@ public class App {
     }, new VelocityTemplateEngine());
     //page where students can view lessons and links to submit assignments
     get("/students/:studentId/courses/:courseId/lessons/:lessonId", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
       Student student = Student.find(Integer.parseInt(request.params("studentId")));
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
@@ -101,7 +168,7 @@ public class App {
     }, new VelocityTemplateEngine());
     // page to edit or submit an assignment
     get("/students/:studentId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
       Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
       Student student = Student.find(Integer.parseInt(request.params("studentId")));
@@ -114,7 +181,6 @@ public class App {
         }
       }
       model.put("student", student);
-      model.put("message", captureFlashMessage(request));
       model.put("lesson", lesson);
       model.put("course", course);
       model.put("assignment", assignment);
@@ -136,7 +202,7 @@ public class App {
     });
     //update assignment if student wants to change it after submitting it
     post("/students/:studentId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId/edit", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       int course_id = Integer.parseInt(request.params("courseId"));
       int student_id = Integer.parseInt(request.params("studentId"));
       int lesson_id = Integer.parseInt(request.params("lessonId"));
@@ -151,7 +217,7 @@ public class App {
     });
     //main teacher page - signup/apply/signin
     get("/teachers", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       model.put("teachers", Teacher.all());
       model.put("template", "templates/teachers.vtl");
       return new ModelAndView(model, layout);
@@ -170,7 +236,7 @@ public class App {
     });
     //individual teacher page, shows courses teaching and allows creating new courses
     get("/teachers/:id", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("id")));
       model.put("teacher", teacher);
       model.put("subjects", Course.Subjects.values());
@@ -178,7 +244,7 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     post("/teachers/:id", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Course course = new Course(request.queryParams("title"),request.queryParams("description"),request.queryParams("subject"),Integer.parseInt(request.params("id")));
       course.save();
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("id")));
@@ -189,20 +255,16 @@ public class App {
     }, new VelocityTemplateEngine());
     //allows teacher to view/edit course, add lessons
     get("/teachers/:teacherId/courses/:courseId", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
       Teacher teacher = Teacher.find(Integer.parseInt(request.params("teacherId")));
-      // Student student = Student.find(course.get());
-      // model.put("student", student);
       model.put("teacher", teacher);
       model.put("course", course);
-      model.put("message", captureFlashMessage(request));
       model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/teacher-courses.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     post("/teachers/:teacherId/courses/:courseId/edit", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
@@ -216,7 +278,6 @@ public class App {
     });
     //delete lesson if teacher wants to delete it
     post("/teachers/:teacherId/courses/:courseId/delete", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       Course course = Course.find(Integer.parseInt(request.params("courseId")));
       course.delete();
@@ -225,8 +286,8 @@ public class App {
       response.redirect(urlString);
       return null;
     });
+    //create new lesson (redirects to lesson page)
     post("/teachers/:teacherId/courses/:courseId/lessons/new", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       Lesson lesson = new Lesson(request.queryParams("name"), request.queryParams("reading"), request.queryParams("lecture"), course_id);
@@ -239,20 +300,18 @@ public class App {
 
     //allows teacher to view/edit lessons and add or access assignments for grading
     get("/teachers/:teacherId/courses/:courseId/lessons/:lessonId", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       model.put("course_id", course_id);
       model.put("teacher_id", teacher_id);
-      model.put("message", captureFlashMessage(request));
       model.put("lesson", lesson);
       model.put("template", "templates/teacher-lessons.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     //post for edit lesson from individual lesson page
     post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/edit", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
@@ -266,7 +325,6 @@ public class App {
     });
     //delete lesson if teacher wants to delete it
     post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/delete", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
@@ -278,7 +336,6 @@ public class App {
     });
     // posts from assignments new to teacher/:id/courses/:id/lessons/getId()
     post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/new", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
       Lesson lesson = Lesson.find(Integer.parseInt(request.params("lessonId")));
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
@@ -293,7 +350,7 @@ public class App {
     });
     // allows teachers to access student assignments, allows grading
     get("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Assignment assignment = Assignment.find(Integer.parseInt(request.params("assignmentId")));
       Student student = Student.find(assignment.getStudentId());
       int course_id = Integer.parseInt(request.params("courseId"));
@@ -303,7 +360,6 @@ public class App {
       model.put("teacher_id", teacher_id);
       model.put("lesson_id", lesson_id);
       model.put("student", student);
-      model.put("message", captureFlashMessage(request));
       model.put("assignment", assignment);
       model.put("template", "templates/teacher-assignments.vtl");
       return new ModelAndView(model, layout);
@@ -323,7 +379,6 @@ public class App {
     });
     //post for edit assignment - assignments can be edited from their lesson page, so this redirects back to lesson page
     post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId/edit", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       int lesson_id = Integer.parseInt(request.params("lessonId"));
@@ -337,7 +392,7 @@ public class App {
     });
     //delete assignment if teacher wants to delete it
     post("/teachers/:teacherId/courses/:courseId/lessons/:lessonId/assignments/:assignmentId/delete", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       int course_id = Integer.parseInt(request.params("courseId"));
       int teacher_id = Integer.parseInt(request.params("teacherId"));
       int lesson_id = Integer.parseInt(request.params("lessonId"));
@@ -351,7 +406,7 @@ public class App {
     //main course page - view/search all courses
     //TODO: add some indicator if a course is not being taught
     get("/courses", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       model.put("courses", Course.all());
       model.put("subjects", Course.Subjects.values());
       model.put("template", "templates/courses.vtl");
@@ -359,7 +414,7 @@ public class App {
     }, new VelocityTemplateEngine());
     //individual course page shows course details
     get("/courses/:id", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
+      Map<String, Object> model = modelWithLogin(request);
       Course course = Course.find(Integer.parseInt(request.params("id")));
       Teacher teacher = null;
       if(course.getTeacherId() != Course.NO_TEACHER){
@@ -433,5 +488,15 @@ public class App {
       request.session().removeAttribute(FLASH_MESSAGE_KEY);
     }
     return message;
+  }
+
+  private static Map<String, Object> modelWithLogin(Request request){
+    Map<String, Object> model = new HashMap<String, Object>();
+    if(request.session(false) != null){
+      model.put("user_type", request.session().attribute(USER_TYPE_KEY));
+      model.put("user_id", request.session().attribute(USER_ID_KEY));
+      model.put("message", captureFlashMessage(request));
+    }
+    return model;
   }
 }
