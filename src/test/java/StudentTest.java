@@ -145,6 +145,14 @@ public class StudentTest {
     assertFalse(student1.getLessonAssignments(lesson.getId()).contains(testAssignment3));
   }
 
+  @Test
+  public void checkDuplicates_checksForDuplicateNamesInUserDatabase() {
+    Student student3 = new Student("Karen");
+    student2.save();
+    student3.save();
+    assertEquals(true, Student.checkDuplicates("Karen"));
+  }
+
   @After
   public void tearDown() {
     try(Connection con = DB.sql2o.open()) {

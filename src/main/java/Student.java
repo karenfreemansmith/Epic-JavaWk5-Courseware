@@ -173,4 +173,18 @@ public class Student {
         .executeAndFetch(Assignment.class);
     }
   }
+
+  public static Boolean checkDuplicates(String username) {
+    String sql = "SELECT id FROM users WHERE name = :username";
+    try(Connection con = DB.sql2o.open()) {
+      Integer id = con.createQuery(sql)
+      .addParameter("username", username)
+      .executeAndFetchFirst(Integer.class);
+      if(id == null) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
 }

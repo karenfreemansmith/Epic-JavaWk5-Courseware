@@ -31,7 +31,7 @@
     <h3>$teacher.getName()'s Courses</h3>
     #if($teacher.getAllCourses().size() > 0)
       #foreach($course in $teacher.getAllCourses())
-        <li><a href="/teachers/$teacher.getId()/courses/$course.getId()">$course.getName()</a> #if($course.hasUngraded()) !!! #end</li>
+        <li><a href="/teachers/$teacher.getId()/courses/$course.getId()">$course.getName()</a> #if($course.hasUngraded()) Not Graded #end</li>
       #end
     #else
       Hi, $teacher.getName(). Use the form on the left to create your first course.

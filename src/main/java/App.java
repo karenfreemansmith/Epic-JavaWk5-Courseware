@@ -44,9 +44,17 @@ public class App {
     }, new VelocityTemplateEngine());
     post("/students", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
+      String url = "/students";
+      String name = request.queryParams("name");
+      Student.checkDuplicates(name);
+      if(Student.checkDuplicates(name) == true) {
+        response.redirect(url);
+        halt();
+      }
       Student student = new Student(request.queryParams("name"));
       Course course = Course.find(Integer.parseInt(request.queryParams("course")));
       student.enroll(course.getId());
+      setFlashMessage(request, "That username has already been taken!");
       model.put("courses", Course.allWithTeachers());
       model.put("student", student);
       model.put("template", "templates/student.vtl");
@@ -149,7 +157,14 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
     post("/teachers", (request, response) -> {
+      String url = "/teachers";
+      String name = request.queryParams("name");
+      if(Student.checkDuplicates(name) == true) {
+        response.redirect(url);
+        halt();
+      }
       Teacher teacher = new Teacher(request.queryParams("name"));
+
       response.redirect("/teachers/" + teacher.getId());
       return null;
     });
