@@ -10,9 +10,9 @@
         <li><a href="/teachers/$teacher.getId()/courses/$course.getId()/lessons/$lesson.getId()">$lesson.getName()</a></li>
       #end
     #end
+    <h3>Roster</h3>
     <div class="row">
       <div class="col-xs-6">
-        <h3>Roster</h3>
         #if($course.getStudents().size() > 0)
           <h4 id="students-enrolled">Students Enrolled:</h4>
           #foreach($student in $course.getStudents())

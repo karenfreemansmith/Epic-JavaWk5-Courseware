@@ -1,12 +1,13 @@
 <p class="pull-left"><a href="/">Home</a>: <a href="/teachers/$teacher.getId()">Teacher</a>:</p>
 <br>
 <br>
-<h2>$teacher.getName() $teacher.getSurname()</h2>
-<h3>$teacher.getBio()</h3>
+
 #if($user_id)
   #if($user_id == $teacher.getId())
   <div class="row">
     <div class="col-sm-6">
+    <h3>$teacher.getName() $teacher.getSurname()</h3>
+    <h4>$teacher.getBio()</h4>
     <h3>$teacher.getName()'s Courses</h3>
     #if($teacher.getAllCourses().size() > 0)
       #foreach($course in $teacher.getAllCourses())
@@ -27,6 +28,27 @@
       #end
   </div>
   <div class="col-sm-6">
+  <h3>Edit User Info</h3>
+  <h4>Note: to change your email, please contact an administrator</h4>
+  <form action="/teachers/$teacher.getId()/edit" method="post">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" name="name" value="$teacher.getName()">
+    </div>
+    <div class="form-group">
+      <label for="surname">Surname:</label>
+      <input type="text" class="form-control" name="surname" value="$teacher.getSurname()">
+    </div>
+    <div class="form-group">
+      <label for="bio">Bio:</label>
+      <textarea name="bio" id="bio"> $teacher.getBio()</textarea>
+    </div>
+    <button type="submit" class="btn btn-default">Update Info</button>
+  </form>
+  <form class="delete-right" action="/teachers/$teacher.getId()/delete" method="post">
+    <button type="submit" class="btn btn-danger">Delete Your Account</button>
+  </form>
+  <h3>Add Classes</h3>
     <form action="/teachers/$teacher.getId()" method="post">
       <div class="form-group">
         <label for="title">Course Title:</label>
@@ -48,30 +70,7 @@
     </form>
   </div>
 </div>
-<div class="row">
-  <div class="col-sm-6">
-    <h3>Edit User Info</h3>
-    <h4>Note: to change your email, please contact an administrator</h4>
-    <form action="/teachers/$teacher.getId()/edit" method="post">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" class="form-control" name="name" value="$teacher.getName()">
-      </div>
-      <div class="form-group">
-        <label for="surname">Surname:</label>
-        <input type="text" class="form-control" name="surname" value="$teacher.getSurname()">
-      </div>
-      <div class="form-group">
-        <label for="bio">Bio:</label>
-        <textarea name="bio" id="bio"> $teacher.getBio()</textarea>
-      </div>
-      <button type="submit" class="btn btn-default">Update Info</button>
-    </form>
-    <form class="delete-right" action="/teachers/$teacher.getId()/delete" method="post">
-      <button type="submit" class="btn btn-danger">Delete Your Account</button>
-    </form>
-  </div>
-</div>
+
 #end
 #else
   <h3>$teacher.getName()'s Courses</h3>
