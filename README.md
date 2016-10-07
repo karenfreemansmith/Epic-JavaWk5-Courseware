@@ -11,8 +11,6 @@ Group Project for Week 5, Java at Epicodus - A web-based platform to create and 
 
 ### Specifications
 #### User Stories:
-
-##### MVP (Musts)
 * As a teacher, I want to be able to create a course X
   * As a teacher, I want to upload course materials as links or as simple text X
   * As a teacher I want to see all the students in the course X
